@@ -1,0 +1,260 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<time.h>
+
+#define N 9
+#define UNASSIGNED 0
+#define TEMP 0.5
+#define ALPHA 0.99999
+#define MAX_ITER 1000000
+
+bool checkbox(int grid[N][N], int box_start_row, int box_start_col, int value)
+{
+    for (int row = box_start_row; row < box_start_row + 3; row++)
+    {
+        for (int col = box_start_col; col < box_start_col + 3; col++)
+        {
+            if (grid[row][col] == value)
+            {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+void rand_init(int grid[N][N])
+{
+    int value;
+    
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            if (grid[i][j] == UNASSIGNED)
+            {
+                while(1)
+                {
+                    value = (rand() % N) + 1;
+                    if (checkbox(grid, i-i%3, j-j%3, value))
+                    {
+                        grid[i][j] = value;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+int get_cost(int grid[N][N])
+{
+    int cost = 0;
+    int unique_num = 0;
+    int * score_board = malloc(N * sizeof(int));
+    
+    for (int row = 0; row < N; row++)
+    {
+        memset(score_board, 0, N * sizeof(int));
+        unique_num = 0;
+        
+        for (int i = 0; i < N; i++)
+        {
+            score_board[grid[row][i] - 1] += 1;
+        }
+        
+        for (int j = 0; j < N; j++)
+        {
+            if (score_board[j] != 0)
+            {
+                unique_num++;
+            }
+        }
+        
+        cost += (-1) * unique_num;
+    }
+    
+    for (int col = 0; col < N; col++)
+    {
+        memset(score_board, 0, N * sizeof(int));
+        unique_num = 0;
+        
+        for (int i = 0; i < N; i++)
+        {
+            score_board[grid[i][col] - 1] += 1;
+        }
+        
+        for (int j = 0; j < N; j++)
+        {
+            if (score_board[j] != 0)
+            {
+                unique_num++;
+            }
+        }
+        
+        cost += (-1) * unique_num;
+    }
+    
+    free(score_board);
+    return cost;
+}
+
+void gen_candidate(int grid[N][N], int candidate[N][N])
+{
+    for (int i = 0; i < N; i++)
+    {
+        memcpy(&candidate[i], &grid[i], sizeof(grid[0]));
+    }
+    
+    int blockIdx = rand() % N;
+    int element1_index = rand() % N;
+    int element2_index = rand() % N;
+    
+    while(1)
+    {
+        if (element1_index != element2_index)
+        {
+            break;
+        }
+        element1_index = rand() % N;
+        element2_index = rand() % N;
+    }
+    
+    int row1 = (blockIdx / 3) * 3 + element1_index / 3;
+    int col1 = (blockIdx % 3) * 3 + element1_index % 3;
+    int row2 = (blockIdx / 3) * 3 + element2_index / 3;
+    int col2 = (blockIdx % 3) * 3 + element2_index % 3;
+    
+    int tmp = 0;
+    
+    tmp = candidate[row1][col1];
+    candidate[row1][col1] = candidate[row2][col2];
+    candidate[row2][col2] = tmp;
+    
+    return;
+}
+
+void update_grid(int grid[N][N], int candidate[N][N])
+{
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            grid[i][j] = candidate[i][j];
+        }
+    }
+}
+
+void printgrid(int grid[N][N])
+{
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            printf("%d ", grid[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+bool sudoku_solver(int grid[N][N])
+{
+    int candidate[N][N];
+    int current_cost = 0;
+    int candidate_cost = 0;
+    float delta_cost = 0.0;
+    float T = TEMP;
+    int count  = 0;
+    
+    srand(time(NULL));
+    
+    rand_init(grid);
+    //printgrid(grid);
+    
+    while(count < MAX_ITER)
+    {
+        gen_candidate(grid, candidate);
+        current_cost = get_cost(grid);
+        candidate_cost = get_cost(candidate);
+        delta_cost = (float)(current_cost - candidate_cost);
+        
+        /*printf("Iteration #%d:\n", count);
+        printf("current_cost = %d\n", current_cost);
+        printf("candidate_cost = %d\n", candidate_cost);
+        printf("\n");*/
+        
+        if (exp(delta_cost / T) > ((float)(rand()) / RAND_MAX))
+        {
+            //printf("update!\n");
+            //printgrid(candidate);
+            //printf("\n");
+            update_grid(grid, candidate);
+            //printgrid(grid);
+            current_cost = candidate_cost;
+        }
+        
+        if (candidate_cost == -162)
+        {
+            update_grid(grid, candidate);
+            break;
+        }
+        
+        T = ALPHA * T;
+        count++;
+    }
+    
+    //printf("cost = %d\n", current_cost);
+    printf("Iterations: %d \n", count);
+    if (get_cost(grid) == -162)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+int main()
+{
+    int grid[N][N] = {{3, 0, 6, 5, 0, 8, 4, 0, 0},
+        {5, 2, 0, 0, 0, 0, 0, 0, 0},
+        {0, 8, 7, 0, 0, 0, 0, 3, 1},
+        {0, 0, 3, 0, 1, 0, 0, 8, 0},
+        {9, 0, 0, 8, 6, 3, 0, 0, 5},
+        {0, 5, 0, 0, 9, 0, 6, 0, 0},
+        {1, 3, 0, 0, 0, 0, 2, 5, 0},
+        {0, 0, 0, 0, 0, 0, 0, 7, 4},
+        {0, 0, 5, 2, 0, 6, 3, 0, 0}};
+    
+    /*int grid[N][N] = {{5,3,0,0,7,0,0,0,0},
+        {6,0,0,1,9,5,0,0,0},
+        {0,9,8,0,0,0,0,6,0},
+        {8,0,0,0,6,0,0,0,3},
+        {4,0,0,8,0,3,0,0,1},
+        {7,0,0,0,2,0,0,0,6},
+        {0,6,0,0,0,0,2,8,0},
+        {0,0,0,4,1,9,0,0,5},
+        {0,0,0,0,8,0,0,7,9}};*/
+    
+    
+    if (sudoku_solver(grid))
+    {
+        printgrid(grid);
+    }
+    else
+    {
+        printf("No valid solution for the game!\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
