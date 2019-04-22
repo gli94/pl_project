@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
+#include<time.h>
 
 #define N 9
 #define UNASSINED 0
@@ -118,6 +119,8 @@ bool sudoku_solver(int grid[N][N])
 
 int main()
 {
+    clock_t begin = clock();
+
     int grid[N][N] = {{3, 0, 6, 5, 0, 8, 4, 0, 0},
                       {5, 2, 0, 0, 0, 0, 0, 0, 0},
                       {0, 8, 7, 0, 0, 0, 0, 3, 1},
@@ -136,6 +139,11 @@ int main()
     {
         printf("No valid solution for the game!\n");
     }
+    
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    
+    printf("Execution time: %lfs\n", time_spent);
     
     return 0;
 }
