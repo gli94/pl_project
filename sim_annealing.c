@@ -103,7 +103,7 @@ int get_cost(int grid[N][N])
     return cost;
 }
 
-void gen_candidate(int grid[N][N], int candidate[N][N])
+void gen_candidate(int grid[N][N], int candidate[N][N], int initial_grid[N][N])
 {
     for (int i = 0; i < N; i++)
     {
@@ -111,23 +111,28 @@ void gen_candidate(int grid[N][N], int candidate[N][N])
     }
     
     int blockIdx = rand() % N;
-    int element1_index = rand() % N;
-    int element2_index = rand() % N;
+    int element1_index = 0;
+    int element2_index = 0;
+    int row1 = 0;
+    int col1 = 0;
+    int row2 = 0;
+    int col2 = 0;
     
     while(1)
     {
-        if (element1_index != element2_index)
+        element1_index = rand() % N;
+        element2_index = rand() % N;
+        row1 = (blockIdx / 3) * 3 + element1_index / 3;
+        col1 = (blockIdx % 3) * 3 + element1_index % 3;
+        row2 = (blockIdx / 3) * 3 + element2_index / 3;
+        col2 = (blockIdx % 3) * 3 + element2_index % 3;
+        
+        if ((element1_index != element2_index) && (initial_grid[row1][col1] == UNASSIGNED) && (initial_grid[row2][col2] == UNASSIGNED))
         {
             break;
         }
-        element1_index = rand() % N;
-        element2_index = rand() % N;
     }
     
-    int row1 = (blockIdx / 3) * 3 + element1_index / 3;
-    int col1 = (blockIdx % 3) * 3 + element1_index % 3;
-    int row2 = (blockIdx / 3) * 3 + element2_index / 3;
-    int col2 = (blockIdx % 3) * 3 + element2_index % 3;
     
     int tmp = 0;
     
@@ -164,11 +169,14 @@ void printgrid(int grid[N][N])
 bool sudoku_solver(int grid[N][N])
 {
     int candidate[N][N];
+    int initial_grid[N][N];
     int current_cost = 0;
     int candidate_cost = 0;
     float delta_cost = 0.0;
     float T = TEMP;
     int count  = 0;
+    
+    update_grid(initial_grid, grid);
     
     srand(time(NULL));
     
@@ -177,7 +185,7 @@ bool sudoku_solver(int grid[N][N])
     
     while(count < MAX_ITER)
     {
-        gen_candidate(grid, candidate);
+        gen_candidate(grid, candidate, initial_grid);
         current_cost = get_cost(grid);
         candidate_cost = get_cost(candidate);
         delta_cost = (float)(current_cost - candidate_cost);
