@@ -4,6 +4,7 @@
 #include<time.h>
 
 #define N 9
+#define BLOCK_SIZE 3
 #define UNASSINED 0
 
 bool checkcomplete(int grid[N][N], int *row, int *col)
@@ -52,9 +53,9 @@ bool checkcol(int grid[N][N], int col, int value)
 
 bool checkbox(int grid[N][N], int box_start_row, int box_start_col, int value)
 {
-    for (int row = box_start_row; row < box_start_row + 3; row++)
+    for (int row = box_start_row; row < box_start_row + BLOCK_SIZE; row++)
     {
-        for (int col = box_start_col; col < box_start_col + 3; col++)
+        for (int col = box_start_col; col < box_start_col + BLOCK_SIZE; col++)
         {
             if (grid[row][col] == value)
             {
@@ -68,7 +69,7 @@ bool checkbox(int grid[N][N], int box_start_row, int box_start_col, int value)
 
 bool isvalid(int grid[N][N], int row, int col, int value)
 {
-    if (checkrow(grid, row, value) && checkcol(grid, col, value) && checkbox(grid, row - row % 3, col - col % 3, value) && (grid[row][col] == UNASSINED))
+    if (checkrow(grid, row, value) && checkcol(grid, col, value) && checkbox(grid, row - row % BLOCK_SIZE, col - col % BLOCK_SIZE, value) && (grid[row][col] == UNASSINED))
     {
         return true;
     }
@@ -99,7 +100,7 @@ bool sudoku_solver(int grid[N][N])
         return true;
     }
     
-    for (int value = 1; value < 10; value++)
+    for (int value = 1; value < N + 1; value++)
     {
         if (isvalid(grid, row, col, value))
         {
@@ -130,6 +131,35 @@ int main()
                       {1, 3, 0, 0, 0, 0, 2, 5, 0},
                       {0, 0, 0, 0, 0, 0, 0, 7, 4},
                       {0, 0, 5, 2, 0, 6, 3, 0, 0}};
+    
+    /*int grid[N][N] = {{0, 0, 6, 0, 7, 0, 0, 0, 15, 0, 0, 0, 0, 0, 5, 9},
+        {0, 0, 3, 0, 0, 6, 0, 14, 0, 0, 0, 1, 0, 2, 0, 0},
+        {0, 13, 0, 14, 10, 0, 0, 15, 0, 0, 6, 11, 0, 0, 0, 1},
+        {5, 2, 0, 15, 0, 12, 16, 0, 0, 9, 4, 0, 0, 0, 0, 7},
+        {0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 13, 0, 14},
+        {14, 0, 0, 6, 11, 10, 13, 1, 0, 0, 5, 3, 0, 8, 0, 0},
+        {0, 0, 0, 12, 0, 0, 7, 0, 0, 0, 0, 13, 0, 0, 0, 0},
+        {2, 0, 0, 0, 0, 0, 0, 3, 4, 1, 10, 0, 15, 0, 7, 0},
+        {8, 0, 0, 0, 0, 0, 4, 0, 0, 6, 13, 9, 7, 0, 0, 0},
+        {0, 0, 0, 2, 12, 0, 0, 0, 16, 0, 0, 8, 13, 0, 0, 0},
+        {1, 14, 0, 0, 2, 0, 0, 10, 0, 3, 0, 15, 0, 6, 0, 0},
+        {0, 4, 0, 3, 0, 14, 11, 6, 0, 0, 12, 0, 0, 0, 10, 0},
+        {0, 9, 0, 0, 0, 1, 2, 7, 0, 11, 8, 12, 0, 0, 0, 16},
+        {0, 5, 0, 0, 0, 0, 3, 11, 9, 0, 0, 10, 0, 7, 0, 0},
+        {0, 12, 13, 0, 0, 0, 0, 0, 5, 15, 0, 0, 0, 9, 8, 0},
+        {0, 16, 11, 10, 9, 0, 0, 0, 0, 0, 7, 0, 5, 0, 0, 0}};*/
+    
+    /*int grid[N][N] = {{0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 3, 0, 8, 5},
+        {0, 0, 1, 0, 2, 0, 0, 0, 0},
+        {0, 0, 0, 5, 0, 7, 0, 0, 0},
+        {0, 0, 4, 0, 0, 0, 1, 0, 0},
+        {0, 9, 0, 0, 0, 0, 0, 0, 0},
+        {5, 0, 0, 0, 0, 0, 0, 7, 3},
+        {0, 0, 2, 0, 1, 0, 0, 0, 0},
+        {0, 0, 0, 0, 4, 0, 0, 0, 9}};*/
+
+
     
     if (sudoku_solver(grid))
     {

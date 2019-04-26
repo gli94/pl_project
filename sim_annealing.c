@@ -6,6 +6,7 @@
 #include<time.h>
 
 #define N 9
+#define BLOCK_SIZE 3
 #define UNASSIGNED 0
 #define TEMP 0.5
 #define ALPHA 0.99999
@@ -13,9 +14,9 @@
 
 bool checkbox(int grid[N][N], int box_start_row, int box_start_col, int value)
 {
-    for (int row = box_start_row; row < box_start_row + 3; row++)
+    for (int row = box_start_row; row < box_start_row + BLOCK_SIZE; row++)
     {
-        for (int col = box_start_col; col < box_start_col + 3; col++)
+        for (int col = box_start_col; col < box_start_col + BLOCK_SIZE; col++)
         {
             if (grid[row][col] == value)
             {
@@ -40,7 +41,7 @@ void rand_init(int grid[N][N])
                 while(1)
                 {
                     value = (rand() % N) + 1;
-                    if (checkbox(grid, i-i%3, j-j%3, value))
+                    if (checkbox(grid, i - i % BLOCK_SIZE, j - j % BLOCK_SIZE, value))
                     {
                         grid[i][j] = value;
                         break;
@@ -122,10 +123,10 @@ void gen_candidate(int grid[N][N], int candidate[N][N], int initial_grid[N][N])
     {
         element1_index = rand() % N;
         element2_index = rand() % N;
-        row1 = (blockIdx / 3) * 3 + element1_index / 3;
-        col1 = (blockIdx % 3) * 3 + element1_index % 3;
-        row2 = (blockIdx / 3) * 3 + element2_index / 3;
-        col2 = (blockIdx % 3) * 3 + element2_index % 3;
+        row1 = (blockIdx / BLOCK_SIZE) * BLOCK_SIZE + element1_index / BLOCK_SIZE;
+        col1 = (blockIdx % BLOCK_SIZE) * BLOCK_SIZE + element1_index % BLOCK_SIZE;
+        row2 = (blockIdx / BLOCK_SIZE) * BLOCK_SIZE + element2_index / BLOCK_SIZE;
+        col2 = (blockIdx % BLOCK_SIZE) * BLOCK_SIZE + element2_index % BLOCK_SIZE;
         
         if ((element1_index != element2_index) && (initial_grid[row1][col1] == UNASSIGNED) && (initial_grid[row2][col2] == UNASSIGNED))
         {
@@ -181,7 +182,9 @@ bool sudoku_solver(int grid[N][N])
     srand(time(NULL));
     
     rand_init(grid);
-    //printgrid(grid);
+    /*printgrid(grid);
+    
+    printf("Initial cost = %d\n", get_cost(grid));*/
     
     while(count < MAX_ITER)
     {
@@ -205,7 +208,7 @@ bool sudoku_solver(int grid[N][N])
             current_cost = candidate_cost;
         }
         
-        if (candidate_cost == -162)
+        if (candidate_cost == (-2) * N * N)
         {
             update_grid(grid, candidate);
             break;
@@ -215,9 +218,9 @@ bool sudoku_solver(int grid[N][N])
         count++;
     }
     
-    //printf("cost = %d\n", current_cost);
+    //printf("final cost = %d\n", current_cost);
     printf("Iterations: %d \n", count);
-    if (get_cost(grid) == -162)
+    if (get_cost(grid) == (-2) * N * N)
     {
         return true;
     }
@@ -251,6 +254,42 @@ int main()
         {0,0,0,4,1,9,0,0,5},
         {0,0,0,0,8,0,0,7,9}};*/
     
+    /*int grid[N][N] = {{0, 0, 6, 0, 7, 0, 0, 0, 15, 0, 0, 0, 0, 0, 5, 9},
+        {0, 0, 3, 0, 0, 6, 0, 14, 0, 0, 0, 1, 0, 2, 0, 0},
+        {0, 13, 0, 14, 10, 0, 0, 15, 0, 0, 6, 11, 0, 0, 0, 1},
+        {5, 2, 0, 15, 0, 12, 16, 0, 0, 9, 4, 0, 0, 0, 0, 7},
+        {0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 13, 0, 14},
+        {14, 0, 0, 6, 11, 10, 13, 1, 0, 0, 5, 3, 0, 8, 0, 0},
+        {0, 0, 0, 12, 0, 0, 7, 0, 0, 0, 0, 13, 0, 0, 0, 0},
+        {2, 0, 0, 0, 0, 0, 0, 3, 4, 1, 10, 0, 15, 0, 7, 0},
+        {8, 0, 0, 0, 0, 0, 4, 0, 0, 6, 13, 9, 7, 0, 0, 0},
+        {0, 0, 0, 2, 12, 0, 0, 0, 16, 0, 0, 8, 13, 0, 0, 0},
+        {1, 14, 0, 0, 2, 0, 0, 10, 0, 3, 0, 15, 0, 6, 0, 0},
+        {0, 4, 0, 3, 0, 14, 11, 6, 0, 0, 12, 0, 0, 0, 10, 0},
+        {0, 9, 0, 0, 0, 1, 2, 7, 0, 11, 8, 12, 0, 0, 0, 16},
+        {0, 5, 0, 0, 0, 0, 3, 11, 9, 0, 0, 10, 0, 7, 0, 0},
+        {0, 12, 13, 0, 0, 0, 0, 0, 5, 15, 0, 0, 0, 9, 8, 0},
+        {0, 16, 11, 10, 9, 0, 0, 0, 0, 0, 7, 0, 5, 0, 0, 0}};*/
+    
+    /*int grid[N][N] = {{0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 3, 0, 8, 5},
+        {0, 0, 1, 0, 2, 0, 0, 0, 0},
+        {0, 0, 0, 5, 0, 7, 0, 0, 0},
+        {0, 0, 4, 0, 0, 0, 1, 0, 0},
+        {0, 9, 0, 0, 0, 0, 0, 0, 0},
+        {5, 0, 0, 0, 0, 0, 0, 7, 3},
+        {0, 0, 2, 0, 1, 0, 0, 0, 0},
+        {0, 0, 0, 0, 4, 0, 0, 0, 9}};*/
+    
+    /*int grid[N][N] = {{0, 0, 0, 0, 0, 0, 6, 8, 0},
+        {0, 0, 0, 0, 7, 3, 0, 0, 9},
+        {3, 0, 9, 0, 0, 0, 0, 4, 5},
+        {4, 9, 0, 0, 0, 0, 0, 0, 0},
+        {8, 0, 3, 0, 5, 0, 9, 0, 2},
+        {0, 0, 0, 0, 0, 0, 0, 3, 6},
+        {9, 6, 0, 0, 0, 0, 3, 0, 8},
+        {7, 0, 0, 6, 8, 0, 0, 0, 0},
+        {0, 2, 8, 0, 0, 0, 0, 0, 0}};*/
     
     if (sudoku_solver(grid))
     {
