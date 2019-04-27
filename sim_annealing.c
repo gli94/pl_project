@@ -10,7 +10,10 @@
 #define UNASSIGNED 0
 #define TEMP 0.5
 #define ALPHA 0.99999
-#define MAX_ITER 10000000000
+#define MAX_ITER 1000000
+#define MAXB 1000
+#define NUM_TESTCASE 100
+#define MAXL N*NUM_TESTCASE
 
 bool checkbox(int grid[N][N], int box_start_row, int box_start_col, int value)
 {
@@ -176,6 +179,55 @@ void gen_candidate(int grid[N][N], int candidate[N][N], int initial_grid[N][N])
     int row2 = 0;
     int col2 = 0;
     
+    int empty_element_cnt = 0;
+    
+    while(1)
+    {
+        
+        empty_element_cnt = 0;
+        blockIdx = rand() % N;
+        
+        for (int i = 0; i < BLOCK_SIZE; i++)
+        {
+            for (int j = 0; j < BLOCK_SIZE; j++)
+            {
+                if (initial_grid[(blockIdx / BLOCK_SIZE) * BLOCK_SIZE + i][(blockIdx % BLOCK_SIZE) * BLOCK_SIZE + j] == UNASSIGNED)
+                {
+                    empty_element_cnt++;
+                    row1 = (blockIdx / BLOCK_SIZE) * BLOCK_SIZE + i;
+                    col1 = (blockIdx % BLOCK_SIZE) * BLOCK_SIZE + j;
+                    
+                }
+            }
+        }
+        
+        if (empty_element_cnt == 0)
+        {
+            blockIdx = rand() % N;
+        }
+        else
+        {
+            break;
+        }
+    }
+    
+    int sum = 0;
+    
+    if (empty_element_cnt == 1)
+    {
+        for (int i = 0; i < BLOCK_SIZE; i++)
+        {
+            for (int j = 0; j < BLOCK_SIZE; j++)
+            {
+                sum += initial_grid[(blockIdx / BLOCK_SIZE) * BLOCK_SIZE + i][(blockIdx % BLOCK_SIZE) * BLOCK_SIZE + j];
+            }
+        }
+        
+        candidate[row1][col1] = 45-sum;
+        return;
+    }
+    
+    
     while(1)
     {
         element1_index = rand() % N;
@@ -236,9 +288,13 @@ bool sudoku_solver(int grid[N][N])
     
     update_grid(initial_grid, grid);
     
+    //printf("Update grid done !\n");
+    
     srand(time(NULL));
     
     rand_init(grid);
+    
+    //printf("Rand init done !\n");
     /*printgrid(grid);
     
     printf("Initial cost = %d\n", get_cost(grid));*/
@@ -246,6 +302,7 @@ bool sudoku_solver(int grid[N][N])
     while(count < MAX_ITER)
     {
         gen_candidate(grid, candidate, initial_grid);
+        //printf("Gen candidate done !\n");
         current_cost = get_cost(grid);
         candidate_cost = get_cost(candidate);
         delta_cost = (float)(current_cost - candidate_cost);
@@ -289,9 +346,120 @@ bool sudoku_solver(int grid[N][N])
 
 int main()
 {
-    clock_t begin = clock();
+    int data[N * NUM_TESTCASE][N];
+    int grid[N][N];
+    
+    double execution_time[NUM_TESTCASE];
+    double time_spent = 0.0;
+    
+    char buf[MAXB] = {0};
+    
+    int i = 0;
+    int j = 0;
+    
+    
+    FILE * file;
+    file = fopen("sudoku_9x9_100_40.txt", "r");
+    
+    if (file == 0)
+    {
+        fprintf(stderr, "failed to open test.txt\n");
+        return 1;
+    }
+    
+    
+    
+    while (i < MAXL && fgets (buf, MAXB - 1, file))
+    {
+        sscanf(buf, "%d %d %d %d %d %d %d %d %d", &data[i][0], &data[i][1], &data[i][2], &data[i][3], &data[i][4], &data[i][5], &data[i][6], &data[i][7], &data[i][8]);
+        i++;
+    }
+    
+    fclose(file);
+    
+   for (i = 0; i < NUM_TESTCASE; i++)
+    {
+        for (int ii = 0; ii < N; ii++)
+        {
+            for (int jj = 0; jj < N; jj++)
+            {
+                grid[ii][jj] = data[ii + i * N][jj];
+            }
+        }
+        
+        printgrid(grid);
+        
+        clock_t begin = clock();
+        
+        if (sudoku_solver(grid))
+        {
+            printgrid(grid);
+        }
+        else
+        {
+            printf("No valid solution for the game!\n");
+        }
+        
+        clock_t end = clock();
+        time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+        
+        execution_time[i] = time_spent;
+        
+        printf("Execution time: %lfs\n", time_spent);
+        
+    }
+    
+    FILE * f = fopen("stats_bench_1.txt", "w");
+    
+    if (f == NULL)
+    {
+        printf("Error!\n");
+        exit(1);
+    }
+    
+    double sum = 0.0;
+    double average = 0.0;
+    double min = 10000.0;
+    double max = 0.0;
+    double variance = 0.0;
+    
+    for (i = 0; i < NUM_TESTCASE; i++)
+    {
+        sum += execution_time[i];
+        fprintf(f, "%lf ", execution_time[i]);
+    }
+    
+    average = sum / NUM_TESTCASE;
+    
+    sum = 0.0;
+    
+    for (i = 0; i < NUM_TESTCASE; i++)
+    {
+        if (execution_time[i] < min)
+        {
+            min = execution_time[i];
+        }
+        
+        if (execution_time[i] > max)
+        {
+            max = execution_time[i];
+        }
+        
+        sum += (execution_time[i] - average)*(execution_time[i] - average);
+    }
+    
+    variance = sum / NUM_TESTCASE;
+    
+    fprintf(f, "\n");
+    fprintf(f, "Average: %lf\n", average);
+    fprintf(f, "Variance: %lf\n", variance);
+    fprintf(f, "Min: %lf\n", min);
+    fprintf(f, "Max: %lf\n", max);
+    
+    fclose(f);
+    
 
-    int grid[N][N] = {{3, 0, 6, 5, 0, 8, 4, 0, 0},
+    /*int grid[N][N] = {{3, 0, 6, 5, 0, 8, 4, 0, 0},
         {5, 2, 0, 0, 0, 0, 0, 0, 0},
         {0, 8, 7, 0, 0, 0, 0, 3, 1},
         {0, 0, 3, 0, 1, 0, 0, 8, 0},
@@ -299,7 +467,7 @@ int main()
         {0, 5, 0, 0, 9, 0, 6, 0, 0},
         {1, 3, 0, 0, 0, 0, 2, 5, 0},
         {0, 0, 0, 0, 0, 0, 0, 7, 4},
-        {0, 0, 5, 2, 0, 6, 3, 0, 0}};
+        {0, 0, 5, 2, 0, 6, 3, 0, 0}};*/
     
     /*int grid[N][N] = {{5,3,0,0,7,0,0,0,0},
         {6,0,0,1,9,5,0,0,0},
@@ -348,19 +516,6 @@ int main()
         {7, 0, 0, 6, 8, 0, 0, 0, 0},
         {0, 2, 8, 0, 0, 0, 0, 0, 0}};*/
     
-    if (sudoku_solver(grid))
-    {
-        printgrid(grid);
-    }
-    else
-    {
-        printf("No valid solution for the game!\n");
-    }
-    
-    clock_t end = clock();
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    
-    printf("Execution time: %lfs\n", time_spent);
     
     return 0;
 }
