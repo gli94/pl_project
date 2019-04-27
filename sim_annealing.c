@@ -52,7 +52,7 @@ void rand_init(int grid[N][N])
     }
 }
 
-int get_cost(int grid[N][N])
+/*int get_cost(int grid[N][N])
 {
     int cost = 0;
     int unique_num = 0;
@@ -101,6 +101,63 @@ int get_cost(int grid[N][N])
     }
     
     free(score_board);
+    return cost;
+}*/
+
+int get_cost(int grid[N][N])
+{
+    int cost = 0;
+    int unique_num = 0;
+    
+    int i = 0;
+    int j = 0;
+    
+    for (int row = 0; row < N; row++)
+    {
+        unique_num = 0;
+        
+        for (i = 0; i < N; i++)
+        {
+            for (j = 0; j < i; j++)
+            {
+                if(grid[row][j] == grid[row][i])
+                {
+                    break;
+                }
+            }
+            
+            if (i == j)
+            {
+                unique_num++;
+            }
+        }
+        
+        cost += (-1) * unique_num;
+    }
+    
+    for (int col = 0; col < N; col++)
+    {
+        unique_num = 0;
+        
+        for (i = 0; i < N; i++)
+        {
+            for (j = 0; j < i; j++)
+            {
+                if(grid[j][col] == grid[i][col])
+                {
+                    break;
+                }
+            }
+            
+            if (i == j)
+            {
+                unique_num++;
+            }
+        }
+        
+        cost += (-1) * unique_num;
+    }
+    
     return cost;
 }
 
