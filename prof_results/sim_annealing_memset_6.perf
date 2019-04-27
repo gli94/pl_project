@@ -1,17 +1,15 @@
 Flat profile:
 
 Each sample counts as 0.01 seconds.
- no time accumulated
-
   %   cumulative   self              self     total           
- time   seconds   seconds    calls  Ts/call  Ts/call  name    
-  0.00      0.00     0.00     6873     0.00     0.00  get_cost
-  0.00      0.00     0.00     3436     0.00     0.00  gen_candidate
-  0.00      0.00     0.00      451     0.00     0.00  update_grid
-  0.00      0.00     0.00      215     0.00     0.00  checkbox
-  0.00      0.00     0.00        1     0.00     0.00  printgrid
-  0.00      0.00     0.00        1     0.00     0.00  rand_init
-  0.00      0.00     0.00        1     0.00     0.00  sudoku_solver
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+100.25      0.02     0.02    40251     0.00     0.00  get_cost
+  0.00      0.02     0.00    20125     0.00     0.00  gen_candidate
+  0.00      0.02     0.00     1454     0.00     0.00  update_grid
+  0.00      0.02     0.00      186     0.00     0.00  checkbox
+  0.00      0.02     0.00        1     0.00     0.00  printgrid
+  0.00      0.02     0.00        1     0.00     0.00  rand_init
+  0.00      0.02     0.00        1     0.00    20.05  sudoku_solver
 
  %         the percentage of the total running time of the
 time       program used by this function.
@@ -49,34 +47,39 @@ notice and this notice are preserved.
 		     Call graph (explanation follows)
 
 
-granularity: each sample hit covers 2 byte(s) no time propagated
+granularity: each sample hit covers 2 byte(s) for 49.88% of 0.02 seconds
 
 index % time    self  children    called     name
-                0.00    0.00    6873/6873        sudoku_solver [7]
-[1]      0.0    0.00    0.00    6873         get_cost [1]
+                0.02    0.00   40251/40251       sudoku_solver [2]
+[1]    100.0    0.02    0.00   40251         get_cost [1]
 -----------------------------------------------
-                0.00    0.00    3436/3436        sudoku_solver [7]
-[2]      0.0    0.00    0.00    3436         gen_candidate [2]
+                0.00    0.02       1/1           main [3]
+[2]    100.0    0.00    0.02       1         sudoku_solver [2]
+                0.02    0.00   40251/40251       get_cost [1]
+                0.00    0.00   20125/20125       gen_candidate [4]
+                0.00    0.00    1454/1454        update_grid [5]
+                0.00    0.00       1/1           rand_init [8]
 -----------------------------------------------
-                0.00    0.00     451/451         sudoku_solver [7]
-[3]      0.0    0.00    0.00     451         update_grid [3]
+                                                 <spontaneous>
+[3]    100.0    0.00    0.02                 main [3]
+                0.00    0.02       1/1           sudoku_solver [2]
+                0.00    0.00       1/1           printgrid [7]
 -----------------------------------------------
-                0.00    0.00     215/215         rand_init [6]
-[4]      0.0    0.00    0.00     215         checkbox [4]
+                0.00    0.00   20125/20125       sudoku_solver [2]
+[4]      0.0    0.00    0.00   20125         gen_candidate [4]
 -----------------------------------------------
-                0.00    0.00       1/1           main [13]
-[5]      0.0    0.00    0.00       1         printgrid [5]
+                0.00    0.00    1454/1454        sudoku_solver [2]
+[5]      0.0    0.00    0.00    1454         update_grid [5]
 -----------------------------------------------
-                0.00    0.00       1/1           sudoku_solver [7]
-[6]      0.0    0.00    0.00       1         rand_init [6]
-                0.00    0.00     215/215         checkbox [4]
+                0.00    0.00     186/186         rand_init [8]
+[6]      0.0    0.00    0.00     186         checkbox [6]
 -----------------------------------------------
-                0.00    0.00       1/1           main [13]
-[7]      0.0    0.00    0.00       1         sudoku_solver [7]
-                0.00    0.00    6873/6873        get_cost [1]
-                0.00    0.00    3436/3436        gen_candidate [2]
-                0.00    0.00     451/451         update_grid [3]
-                0.00    0.00       1/1           rand_init [6]
+                0.00    0.00       1/1           main [3]
+[7]      0.0    0.00    0.00       1         printgrid [7]
+-----------------------------------------------
+                0.00    0.00       1/1           sudoku_solver [2]
+[8]      0.0    0.00    0.00       1         rand_init [8]
+                0.00    0.00     186/186         checkbox [6]
 -----------------------------------------------
 
  This table describes the call tree of the program, and was sorted by
@@ -169,6 +172,6 @@ notice and this notice are preserved.
 
 Index by function name
 
-   [4] checkbox                [5] printgrid               [3] update_grid
-   [2] gen_candidate           [6] rand_init
-   [1] get_cost                [7] sudoku_solver
+   [6] checkbox                [7] printgrid               [5] update_grid
+   [4] gen_candidate           [8] rand_init
+   [1] get_cost                [2] sudoku_solver
