@@ -40,7 +40,7 @@ pwd
 date
 
 # Launch serial code...
-/backtracking_16
+./backtracking_16
 ./sim_annealing_16
 
 #perf stat -r 50 -e cycles:u,cache-misses:u,L1-dcache-load-misses:u,L1-dcache-stores:u,LLC-loads ./${SIZE}_${OPT}
