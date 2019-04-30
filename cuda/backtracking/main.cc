@@ -1,19 +1,20 @@
-#include <cstdio>
+#include "cuda_backtracking.cuh"
+
+/*#include <cstdio>
 #include <cstdlib>
 #include <cmath>
 #include <vector>
 #include <fstream>
 #include <cstring>
-
-
-#include <cuda.h>
-#include <cuda_runtime.h>
-#include <driver_functions.h>
 #include <algorithm>
-#include <curand.h>
 
+#include <cuda_runtime.h>
 #include "cuda_backtracking.cuh"
 
+#define N 9
+#define BLOCK_SIZE 3
+#define UNASSINED 0
+*/
 void load(char *FileName, int *board) {
     FILE * a_file = fopen(FileName, "r");
     
@@ -53,7 +54,7 @@ int main()
     int blocksPerGrid = 1024;
     int threadsPerBlock = 256;
     
-    char *filename = "sudoku_board.txt";
+    char filename[] = "sudoku_board.txt";
     
     int *board = new int[N * N];
     
