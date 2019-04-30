@@ -164,7 +164,7 @@ void cudaBFSKernel (int *old_boards,
     while (index < total_boards)
     {
         int found = 0;
-        current_old_board = old_boards + index * N * N;
+        //current_old_board = old_boards + index * N * N;
         
         for (int i = index * N * N; (i < (index * N * N + N * N) && (found == 0)); i++)
         {
@@ -178,9 +178,29 @@ void cudaBFSKernel (int *old_boards,
                 {
                     int works = 1;
                     
-                    if (!isvalid(current_old_board, N, row, col, attempt))
+                    /*if (!isvalid(current_old_board, N, row, col, attempt))
                     {
                         works = 0;
+                    }*/
+                    
+                    for (int c = 0; c < N; c++) {
+                        if (old_boards[row * N + c + N * N * index] == attempt) {
+                            works = 0;
+                        }
+                    }
+                    // column contraint, test various rows
+                    for (int r = 0; r < N; r++) {
+                        if (old_boards[r * N + col + N * N * index] == attempt) {
+                            works = 0;
+                        }
+                    }
+                    // box constraint
+                    for (int r = n * (row / n); r < n; r++) {
+                        for (int c = n * (col / n); c < n; c++) {
+                            if (old_boards[r * N + c + N * N * index] == attempt) {
+                                works = 0;
+                            }
+                        }
                     }
                     
                     if (works == 1)
