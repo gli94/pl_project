@@ -1,6 +1,4 @@
-#include "cuda_backtracking.cuh"
-
-/*#include <cstdio>
+#include <cstdio>
 #include <cstdlib>
 #include <cmath>
 #include <vector>
@@ -8,13 +6,12 @@
 #include <cstring>
 #include <algorithm>
 
-#include <cuda_runtime.h>
 #include "cuda_backtracking.cuh"
 
 #define N 9
 #define BLOCK_SIZE 3
 #define UNASSINED 0
-*/
+
 void load(char *FileName, int *board) {
     FILE * a_file = fopen(FileName, "r");
     
@@ -60,7 +57,14 @@ int main()
     
     load(filename, board);
     
-    int *old_boards;
+    int *solved = new int[N * N];
+    memset(solved, 0, N * N * sizeof(int));
+    
+    cuda_Backtrack(board, solved);
+    
+    printBoard(solved);
+    
+    /*int *old_boards;
     int *new_boards;
     int *empty_spaces;
     int *empty_space_count;
@@ -121,11 +125,11 @@ int main()
         new_boards = old_boards;
     }
     
-    cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
+    cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);*/
     
-    int *solved = new int[N * N];
-    memset(solved, 0, N * N * sizeof(int));
-    cudaMemcpy(solved, dev_solved, N * N * sizeof(int), cudaMemcpyDeviceToHost);
+    //int *solved = new int[N * N];
+    //memset(solved, 0, N * N * sizeof(int));
+    /*cudaMemcpy(solved, dev_solved, N * N * sizeof(int), cudaMemcpyDeviceToHost);
     printBoard(solved);
 
     delete[] board;
@@ -138,7 +142,7 @@ int main()
     cudaFree(board_index);
     
     cudaFree(dev_finished);
-    cudaFree(dev_solved);
+    cudaFree(dev_solved);*/
     
     return 0;
 }
