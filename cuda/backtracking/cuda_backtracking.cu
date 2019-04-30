@@ -14,11 +14,11 @@
 
 
 __device__
-bool checkrow(int *grid, int N, int row, int value)
+bool checkrow(int *grid, int Num, int row, int value)
 {
-    for (int col = 0; col < N; col++)
+    for (int col = 0; col < Num; col++)
     {
-        if (grid[row * N + col] == value)
+        if (grid[row * Num + col] == value)
         {
             return false;
         }
@@ -28,11 +28,11 @@ bool checkrow(int *grid, int N, int row, int value)
 }
 
 __device__
-bool checkcol(int *grid, int N, int col, int value)
+bool checkcol(int *grid, int Num, int col, int value)
 {
-    for (int row = 0; row < N; row++)
+    for (int row = 0; row < Num; row++)
     {
-        if (grid[row * N + col] == value)
+        if (grid[row * Num + col] == value)
         {
             return false;
         }
@@ -42,13 +42,13 @@ bool checkcol(int *grid, int N, int col, int value)
 }
 
 __device__
-bool checkbox(int *grid, int N, int box_start_row, int box_start_col, int value)
+bool checkbox(int *grid, int Num, int box_start_row, int box_start_col, int value)
 {
     for (int row = box_start_row; row < box_start_row + BLOCK_SIZE; row++)
     {
         for (int col = box_start_col; col < box_start_col + BLOCK_SIZE; col++)
         {
-            if (grid[row * N + col] == value)
+            if (grid[row * Num + col] == value)
             {
                 return false;
             }
@@ -59,9 +59,9 @@ bool checkbox(int *grid, int N, int box_start_row, int box_start_col, int value)
 }
 
 __device__
-bool isvalid(int *grid, int N, int row, int col, int value)
+bool isvalid(int *grid, int Num, int row, int col, int value)
 {
-    if (checkrow(grid, N, row, value) && checkcol(grid, N, col, value) && checkbox(grid, N, row - row % BLOCK_SIZE, col - col % BLOCK_SIZE, value) && (grid[row * N + col] == UNASSINED))
+    if (checkrow(grid, Num, row, value) && checkcol(grid, Num, col, value) && checkbox(grid, Num, row - row % BLOCK_SIZE, col - col % BLOCK_SIZE, value) && (grid[row * Num + col] == UNASSINED))
     {
         return true;
     }
@@ -221,11 +221,14 @@ void callBFSKernel( const int blocksPerGrid,
                    int *empty_spaces,
                    int *empty_space_count)
 {
-    cudaBFSKernel<<<blocksPerGrid, threadsPerBlock>>>(*old_boards, *new_boards, total_boards, *board_index, *empty_spaces, *empty_space_count);
+    cudaBFSKernel<<<blocksPerGrid, threadsPerBlock>>>(old_boards, new_boards, total_boards, board_index, empty_spaces, empty_space_count);
 }
 
 void cuda_Backtrack(int * board, int * solved)
 {
+    int blocksPerGrid = 1024;
+    int threadsPerBlock = 256;
+ 
     int *old_boards;
     int *new_boards;
     int *empty_spaces;
@@ -246,7 +249,7 @@ void cuda_Backtrack(int * board, int * solved)
     cudaMemset(new_boards, 0, sk * sizeof(int));
     cudaMemset(old_boards, 0, sk * sizeof(int));
     
-    cudaMemcpy(old_boards, board, N * N * sizeof(int), cudeMemcpyHostToDevice);
+    cudaMemcpy(old_boards, board, N * N * sizeof(int), cudaMemcpyHostToDevice);
     
     callBFSKernel(blocksPerGrid, threadsPerBlock, old_boards, new_boards, total_boards, board_index, empty_spaces, empty_space_count);
     
@@ -256,7 +259,7 @@ void cuda_Backtrack(int * board, int * solved)
     
     for (int i=0; i<iterations; i++)
     {
-        cudaMemcpy(&host_count, board_index, sizeof(int), cudeMemcpyDeviceToHost);
+        cudaMemcpy(&host_count, board_index, sizeof(int), cudaMemcpyDeviceToHost);
         printf("total boards after an iteration %d: %d\n", i, host_count);
         cudaMemset(board_index, 0, sizeof(int));
         
