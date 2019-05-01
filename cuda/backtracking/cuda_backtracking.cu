@@ -163,7 +163,7 @@ bool validBoard(const int *board, int changed) {
 }
 
 __device__
-bool checkrow(int *grid, int Num, int row)
+bool checkrow(int *grid, int Num, int row, int c, int value)
 {
  
     bool seen[N];
@@ -175,11 +175,11 @@ bool checkrow(int *grid, int Num, int row)
         
     for (int col = 0; col < Num; col++)
     {
-        /*if ((grid[row * Num + col] == value) && col != c);
+        if ((grid[row * Num + col] == value) && col != c);
         {
             return false;
-        }*/
-        int val = grid[row * Num + col];
+        }
+        /*int val = grid[row * Num + col];
         if (val > 0)
         {
             if(seen[val-1])
@@ -190,14 +190,14 @@ bool checkrow(int *grid, int Num, int row)
             {
                 seen[val-1] = true;
             }
-        }
+        }*/
     }
     
     return true;
 }
 
 __device__
-bool checkcol(int *grid, int Num, int col)
+bool checkcol(int *grid, int Num, int r, int col, int value)
 {
     bool seen[N];
     
@@ -208,11 +208,11 @@ bool checkcol(int *grid, int Num, int col)
     
     for (int row = 0; row < Num; row++)
     {
-        /*if ((grid[row * Num + col] == value) && row != r)
+        if ((grid[row * Num + col] == value) && row != r)
         {
             return false;
-        }*/
-        int val = grid[row * Num + col];
+        }
+        /*int val = grid[row * Num + col];
         if (val > 0)
         {
             if(seen[val-1])
@@ -223,14 +223,14 @@ bool checkcol(int *grid, int Num, int col)
             {
                 seen[val-1] = true;
             }
-        }
+        }*/
     }
     
     return true;
 }
 
 __device__
-bool checkbox(int *grid, int Num, int box_start_row, int box_start_col)
+bool checkbox(int *grid, int Num, int box_start_row, int box_start_col, int row, int col, int value)
 {
     
     bool seen[N];
@@ -244,11 +244,11 @@ bool checkbox(int *grid, int Num, int box_start_row, int box_start_col)
     {
         for (int col = box_start_col; col < box_start_col + BLOCK_SIZE; col++)
         {
-            /*if ((grid[row * Num + col] == value) && (row != r) && (col != c))
+            if ((grid[row * Num + col] == value) && (row != r) && (col != c))
             {
                 return false;
-            }*/
-            int val = grid[row * Num + col];
+            }
+            /*int val = grid[row * Num + col];
             if (val > 0)
             {
                 if(seen[val-1])
@@ -259,7 +259,7 @@ bool checkbox(int *grid, int Num, int box_start_row, int box_start_col)
                 {
                     seen[val-1] = true;
                 }
-            }
+            }*/
             
         }
     }
@@ -274,7 +274,7 @@ bool isvalid(int *grid, int Num, int row, int col)
         return false;
     }*/
     
-    if (checkrow(grid, Num, row) && checkcol(grid, Num, col) && checkbox(grid, Num, row - row % BLOCK_SIZE, col - col % BLOCK_SIZE)/* && (grid[row * Num + col] == UNASSINED)*/)
+    if (checkrow(grid, Num, row, col, value) && checkcol(grid, Num, row, col, value) && checkbox(grid, Num, row - row % BLOCK_SIZE, col - col % BLOCK_SIZE, row, col, value)/* && (grid[row * Num + col] == UNASSINED)*/)
     {
         return true;
     }
@@ -320,7 +320,7 @@ void sudoku_backtrack( int *boards,
             col = currentEmptySpaces[emptyIndex] % N;
  
             
-            if(!isvalid(currentBoard, N, row, col))
+            if(!isvalid(currentBoard, N, row, col, currentBoard[currentEmptySpaces[emptyIndex]]))
             {
                 if(currentBoard[currentEmptySpaces[emptyIndex]] >= 9)
                 {
