@@ -274,7 +274,7 @@ bool isvalid(int *grid, int Num, int row, int col)
         return false;
     }*/
     
-    if (checkrow(grid, Num, row, col, value) && checkcol(grid, Num, row, col, value) && checkbox(grid, Num, row - row % BLOCK_SIZE, col - col % BLOCK_SIZE, row, col, value)/* && (grid[row * Num + col] == UNASSINED)*/)
+    if (checkrow(grid, Num, row) && checkcol(grid, Num, col) && checkbox(grid, Num, row - row % BLOCK_SIZE, col - col % BLOCK_SIZE)/* && (grid[row * Num + col] == UNASSINED)*/)
     {
         return true;
     }
