@@ -138,6 +138,7 @@ bool validBoard(const int *board, int changed) {
         }
     }
     
+    int n = BLOCK_SIZE;
     // finally check if the sub-board is valid
     int ridx = r / n;
     int cidx = c / n;
