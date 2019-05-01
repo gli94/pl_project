@@ -61,7 +61,7 @@ bool checkbox(int *grid, int Num, int box_start_row, int box_start_col, int valu
 __device__
 bool isvalid(int *grid, int Num, int row, int col, int value)
 {
-    if (checkrow(grid, Num, row, value) && checkcol(grid, Num, col, value) && checkbox(grid, Num, row - row % BLOCK_SIZE, col - col % BLOCK_SIZE, value) && (grid[row * Num + col] == UNASSINED))
+    if (checkrow(grid, Num, row, value) && checkcol(grid, Num, col, value) && checkbox(grid, Num, row - row % BLOCK_SIZE, col - col % BLOCK_SIZE, value) /*&& (grid[row * Num + col] == UNASSINED)*/)
     {
         return true;
     }
@@ -92,7 +92,7 @@ void sudoku_backtrack( int *boards,
         int emptyIndex = 0;
         int row;
         int col;
-        int value = 0;
+        //int value = 0;
         
         currentBoard = boards + index * N * N;
         currentEmptySpaces = empty_spaces + index * N * N;
@@ -101,15 +101,15 @@ void sudoku_backtrack( int *boards,
         
         while ((emptyIndex >= 0) && (emptyIndex < currentNumEmptySpaces))
         {
-            //currentBoard[currentEmptySpaces[emptyIndex]]++;
-            value++;
+            currentBoard[currentEmptySpaces[emptyIndex]]++;
+            //value++;
             
             row = currentEmptySpaces[emptyIndex] / N;
             col = currentEmptySpaces[emptyIndex] % N;
             
-            if(!isvalid(currentBoard, N, row, col, value))
+            if(!isvalid(currentBoard, N, row, col, currentBoard[currentEmptySpaces[emptyIndex]]))
             {
-                if(value >= 9)
+                if(currentBoard[currentEmptySpaces[emptyIndex]] >= 9)
                 {
                     currentBoard[currentEmptySpaces[emptyIndex]] = 0;
                     emptyIndex--;
@@ -119,8 +119,8 @@ void sudoku_backtrack( int *boards,
             {
                 printf("Valid!\n");
                 printf("EmptyIndex = %d \n", emptyIndex);
-                currentBoard[currentEmptySpaces[emptyIndex]] = value;
-                value = 0;
+               // currentBoard[currentEmptySpaces[emptyIndex]] = value;
+               // value = 0;
                 emptyIndex++;
             }
         }
