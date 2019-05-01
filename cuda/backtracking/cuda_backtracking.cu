@@ -574,6 +574,15 @@ cudaBFSKernel(int *old_boards,
                         }
                         empty_space_count[next_board_index] = empty_index;
                         new_boards[next_board_index * 81 + row * 9 + col] = attempt;
+                        
+                        for (int i = 0; i < N; i++)
+                        {
+                            for (int j = 0; j < N; j++)
+                            {
+                                printf("%d ", new_boards[next_board_index * 81 + i * 9 + j]);
+                            }
+                            printf("\n");
+                        }
                     }
                 }
             }
