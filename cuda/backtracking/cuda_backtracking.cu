@@ -305,6 +305,7 @@ void sudoku_backtrack( int *boards,
         int emptyIndex = 0;
         int row;
         int col;
+        int value = 0;
         
         currentBoard = boards + index * N * N;
         currentEmptySpaces = empty_spaces + index * N * N;
@@ -313,10 +314,10 @@ void sudoku_backtrack( int *boards,
         
         while ((emptyIndex >= 0) && (emptyIndex < currentNumEmptySpaces))
         {
-            currentBoard[currentEmptySpaces[emptyIndex]]++;
+            //currentBoard[currentEmptySpaces[emptyIndex]]++;
             
-            int value = currentBoard[currentEmptySpaces[emptyIndex]];
-            
+            //int value = currentBoard[currentEmptySpaces[emptyIndex]];
+            value++;
             
             row = currentEmptySpaces[emptyIndex] / N;
             col = currentEmptySpaces[emptyIndex] % N;
@@ -334,9 +335,9 @@ void sudoku_backtrack( int *boards,
             {
                 //printf("Valid!\n");
                // printf("EmptyIndex = %d, EmptySpaces = %d \n", emptyIndex, currentNumEmptySpaces);
-                //currentBoard[currentEmptySpaces[emptyIndex]] = value;
+                currentBoard[currentEmptySpaces[emptyIndex]] = value;
                 //printf("Value filled in: %d\n", currentBoard[currentEmptySpaces[emptyIndex]]);
-                //value = 0;
+                value = 0;
                 emptyIndex++;
             }
         }
