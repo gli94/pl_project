@@ -65,6 +65,8 @@ bool validBoard(const int *board) {
         }
     }
     
+    int n = BLOCK_SIZE;
+    
     // finally check if the sub-boards are valid
     for (int ridx = 0; ridx < n; ridx++) {
         for (int cidx = 0; cidx < n; cidx++) {
