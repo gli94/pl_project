@@ -230,7 +230,7 @@ bool checkcol(int *grid, int Num, int r, int col, int value)
 }
 
 __device__
-bool checkbox(int *grid, int Num, int box_start_row, int box_start_col, int row, int col, int value)
+bool checkbox(int *grid, int Num, int box_start_row, int box_start_col, int r, int c, int value)
 {
     
     bool seen[N];
