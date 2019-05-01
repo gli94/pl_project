@@ -122,10 +122,10 @@ void sudoku_backtrack( int *boards,
             }
             else
             {
-                printf("Valid!\n");
-                printf("EmptyIndex = %d, EmptySpaces = %d \n", emptyIndex, currentNumEmptySpaces);
+                //printf("Valid!\n");
+               // printf("EmptyIndex = %d, EmptySpaces = %d \n", emptyIndex, currentNumEmptySpaces);
                 currentBoard[currentEmptySpaces[emptyIndex]] = value;
-                printf("Value filled in: %d\n", currentBoard[currentEmptySpaces[emptyIndex]]);
+                //printf("Value filled in: %d\n", currentBoard[currentEmptySpaces[emptyIndex]]);
                 value = 0;
                 emptyIndex++;
             }
