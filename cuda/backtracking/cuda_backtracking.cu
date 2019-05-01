@@ -166,7 +166,7 @@ __device__
 bool checkrow(int *grid, int Num, int row)
 {
  
-    bool seen[Num];
+    bool seen[N];
     
     for (int i = 0; i < Num; i++)
     {
@@ -199,7 +199,7 @@ bool checkrow(int *grid, int Num, int row)
 __device__
 bool checkcol(int *grid, int Num, int col)
 {
-    bool seen[Num];
+    bool seen[N];
     
     for (int i = 0; i < Num; i++)
     {
@@ -233,7 +233,7 @@ __device__
 bool checkbox(int *grid, int Num, int box_start_row, int box_start_col)
 {
     
-    bool seen[Num];
+    bool seen[N];
     
     for (int i = 0; i < Num; i++)
     {
