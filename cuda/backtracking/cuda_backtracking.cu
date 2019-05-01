@@ -85,14 +85,14 @@ void sudoku_backtrack( int *boards,
     int *currentEmptySpaces;
     int currentNumEmptySpaces;
     
-    int row;
-    int col;
-    int value = 0;
     
     while((*finished == 0) && (index < num_boards))
     {
         
         int emptyIndex = 0;
+        int row;
+        int col;
+        int value = 0;
         
         currentBoard = boards + index * N * N;
         currentEmptySpaces = empty_spaces + index * N * N;
@@ -117,6 +117,7 @@ void sudoku_backtrack( int *boards,
             }
             else
             {
+                printf("Valid!\n");
                 currentBoard[currentEmptySpaces[emptyIndex]] = value;
                 value = 0;
                 emptyIndex++;
