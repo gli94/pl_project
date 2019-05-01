@@ -107,6 +107,8 @@ void sudoku_backtrack( int *boards,
             row = currentEmptySpaces[emptyIndex] / N;
             col = currentEmptySpaces[emptyIndex] % N;
             
+            printf("row = %d, col = %d \n", row, col);
+            
             if(!isvalid(currentBoard, N, row, col, value))
             {
                 if(value >= 9)
@@ -141,6 +143,64 @@ void sudoku_backtrack( int *boards,
         index += gridDim.x * blockDim.x;
     }
 }
+
+/*__global__
+void sudoku_backtrack(int *boards,
+                     const int numBoards,
+                     int *emptySpaces,
+                     int *numEmptySpaces,
+                     int *finished,
+                     int *solved) {
+    
+    int index = blockDim.x * blockIdx.x + threadIdx.x;
+    
+    int *currentBoard;
+    int *currentEmptySpaces;
+    int currentNumEmptySpaces;
+    
+    
+    while ((*finished == 0) && (index < numBoards)) {
+        
+        int emptyIndex = 0;
+        
+        currentBoard = boards + index * 81;
+        currentEmptySpaces = emptySpaces + index * 81;
+        currentNumEmptySpaces = numEmptySpaces[index];
+        
+        while ((emptyIndex >= 0) && (emptyIndex < currentNumEmptySpaces)) {
+            
+            currentBoard[currentEmptySpaces[emptyIndex]]++;
+            
+            if (!validBoard(currentBoard, currentEmptySpaces[emptyIndex])) {
+                
+                // if the board is invalid and we tried all numbers here already, backtrack
+                // otherwise continue (it will just try the next number in the next iteration)
+                if (currentBoard[currentEmptySpaces[emptyIndex]] >= 9) {
+                    currentBoard[currentEmptySpaces[emptyIndex]] = 0;
+                    emptyIndex--;
+                }
+            }
+            // if valid board, move forward in algorithm
+            else {
+                emptyIndex++;
+            }
+            
+        }
+        
+        if (emptyIndex == currentNumEmptySpaces) {
+            // solved board found
+            *finished = 1;
+            
+            // copy board to output
+            for (int i = 0; i < N * N; i++) {
+                solved[i] = currentBoard[i];
+            }
+        }
+        
+        index += gridDim.x * blockDim.x;
+    }
+}*/
+
 
 void cuda_sudokuBacktrack (const int blocksPerGrid,
                            const int threadsPerBlock,
