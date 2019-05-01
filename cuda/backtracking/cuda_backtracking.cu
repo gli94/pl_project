@@ -270,7 +270,7 @@ bool checkbox(int *grid, int Num, int box_start_row, int box_start_col)
 __device__
 bool isvalid(int *grid, int Num, int row, int col)
 {
-    if ((grid[row * N + col] < 1) || (board[row * N + col] > 9)) {
+    if ((grid[row * N + col] < 1) || (grid[row * N + col] > 9)) {
         return false;
     }
     
