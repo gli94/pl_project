@@ -129,6 +129,8 @@ void sudoku_backtrack( int *boards,
         {
             *finished = 1;
             
+            printf("Finished!\n");
+            
             for (int i = 0; i < N * N; i++)
             {
                 solved[i] = currentBoard[i];
