@@ -163,25 +163,27 @@ bool validBoard(const int *board, int changed) {
 }
 
 __device__
-bool checkrow(int *grid, int Num, int row, int value)
+bool checkrow(int *grid, int Num, int row, int c, int value)
 {
+    
     for (int col = 0; col < Num; col++)
     {
-        if (grid[row * Num + col] == value)
+        if ((grid[row * Num + col] == value) && col != c);
         {
             return false;
         }
+        
     }
     
     return true;
 }
 
 __device__
-bool checkcol(int *grid, int Num, int col, int value)
+bool checkcol(int *grid, int Num, int r, int col, int value)
 {
     for (int row = 0; row < Num; row++)
     {
-        if (grid[row * Num + col] == value)
+        if ((grid[row * Num + col] == value) && row != r)
         {
             return false;
         }
@@ -191,13 +193,13 @@ bool checkcol(int *grid, int Num, int col, int value)
 }
 
 __device__
-bool checkbox(int *grid, int Num, int box_start_row, int box_start_col, int value)
+bool checkbox(int *grid, int Num, int box_start_row, int box_start_col, int r, int c, int value)
 {
     for (int row = box_start_row; row < box_start_row + BLOCK_SIZE; row++)
     {
         for (int col = box_start_col; col < box_start_col + BLOCK_SIZE; col++)
         {
-            if (grid[row * Num + col] == value)
+            if ((grid[row * Num + col] == value) && (row != r) && (col != c))
             {
                 return false;
             }
@@ -210,7 +212,7 @@ bool checkbox(int *grid, int Num, int box_start_row, int box_start_col, int valu
 __device__
 bool isvalid(int *grid, int Num, int row, int col, int value)
 {
-    if (checkrow(grid, Num, row, value) && checkcol(grid, Num, col, value) && checkbox(grid, Num, row - row % BLOCK_SIZE, col - col % BLOCK_SIZE, value) && (grid[row * Num + col] == UNASSINED))
+    if (checkrow(grid, Num, row, col, value) && checkcol(grid, Num, row, col, value) && checkbox(grid, Num, row - row % BLOCK_SIZE, col - col % BLOCK_SIZE, row, col, value)/* && (grid[row * Num + col] == UNASSINED)*/)
     {
         return true;
     }
@@ -220,7 +222,7 @@ bool isvalid(int *grid, int Num, int row, int col, int value)
     }
 }
 
-/*__global__
+__global__
 void sudoku_backtrack( int *boards,
                        const int num_boards,
                        int *empty_spaces,
@@ -241,7 +243,6 @@ void sudoku_backtrack( int *boards,
         int emptyIndex = 0;
         int row;
         int col;
-        int value = 0;
         
         currentBoard = boards + index * N * N;
         currentEmptySpaces = empty_spaces + index * N * N;
@@ -250,16 +251,16 @@ void sudoku_backtrack( int *boards,
         
         while ((emptyIndex >= 0) && (emptyIndex < currentNumEmptySpaces))
         {
-            //currentBoard[currentEmptySpaces[emptyIndex]]++;
-            value++;
+            currentBoard[currentEmptySpaces[emptyIndex]]++;
+            
             
             row = currentEmptySpaces[emptyIndex] / N;
             col = currentEmptySpaces[emptyIndex] % N;
  
             
-            if(!isvalid(currentBoard, N, row, col, value))
+            if(!isvalid(currentBoard, N, row, col, currentBoard[currentEmptySpaces[emptyIndex]]))
             {
-                if(value >= 9)
+                if(currentBoard[currentEmptySpaces[emptyIndex]] >= 9)
                 {
                     currentBoard[currentEmptySpaces[emptyIndex]] = 0;
                     emptyIndex--;
@@ -269,9 +270,9 @@ void sudoku_backtrack( int *boards,
             {
                 //printf("Valid!\n");
                // printf("EmptyIndex = %d, EmptySpaces = %d \n", emptyIndex, currentNumEmptySpaces);
-                currentBoard[currentEmptySpaces[emptyIndex]] = value;
+                //currentBoard[currentEmptySpaces[emptyIndex]] = value;
                 //printf("Value filled in: %d\n", currentBoard[currentEmptySpaces[emptyIndex]]);
-                value = 0;
+                //value = 0;
                 emptyIndex++;
             }
         }
@@ -290,9 +291,9 @@ void sudoku_backtrack( int *boards,
         
         index += gridDim.x * blockDim.x;
     }
-}*/
+}
 
-__global__
+/*__global__
 void sudoku_backtrack(int *boards,
                      const int numBoards,
                      int *emptySpaces,
@@ -347,7 +348,7 @@ void sudoku_backtrack(int *boards,
         
         index += gridDim.x * blockDim.x;
     }
-}
+}*/
 
 
 void cuda_sudokuBacktrack (const int blocksPerGrid,
