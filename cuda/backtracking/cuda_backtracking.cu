@@ -550,8 +550,8 @@ cudaBFSKernel(int *old_boards,
                         }
                     }
                     // box constraint
-                    for (int r = BLOCK_SIZE * (row / BLOCK_SIZE); r < BLOCK_SIZE; r++) {
-                        for (int c = BLOCK_SIZE * (col / BLOCK_SIZE); c < BLOCK_SIZE; c++) {
+                    for (int r = BLOCK_SIZE * (row / BLOCK_SIZE); r < BLOCK_SIZE * (row / BLOCK_SIZE) + BLOCK_SIZE; r++) {
+                        for (int c = BLOCK_SIZE * (col / BLOCK_SIZE); c < BLOCK_SIZE * (col / BLOCK_SIZE) + BLOCK_SIZE; c++) {
                             if (old_boards[r * N + c + N * N * index] == attempt) {
                                 works = 0;
                             }
