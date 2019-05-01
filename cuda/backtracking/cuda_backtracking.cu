@@ -325,7 +325,7 @@ void sudoku_backtrack( int *boards,
             
             if(!isvalid(currentBoard, N, row, col, value))
             {
-                if(currentBoard[currentEmptySpaces[emptyIndex]] >= 9)
+                if(value >= 9)
                 {
                     currentBoard[currentEmptySpaces[emptyIndex]] = 0;
                     emptyIndex--;
