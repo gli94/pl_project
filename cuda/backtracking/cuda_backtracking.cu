@@ -163,7 +163,7 @@ bool validBoard(const int *board, int changed) {
 }
 
 __device__
-bool checkrow(int *grid, int Num, int row, int c, int value)
+bool checkrow(int *grid, int Num, int row)
 {
  
     bool seen[N];
@@ -175,11 +175,11 @@ bool checkrow(int *grid, int Num, int row, int c, int value)
         
     for (int col = 0; col < Num; col++)
     {
-        if ((grid[row * Num + col] == value) && col != c);
+        /*if ((grid[row * Num + col] == value) && col != c);
         {
             return false;
-        }
-        /*int val = grid[row * Num + col];
+        }*/
+        int val = grid[row * Num + col];
         if (val > 0)
         {
             if(seen[val-1])
@@ -190,14 +190,14 @@ bool checkrow(int *grid, int Num, int row, int c, int value)
             {
                 seen[val-1] = true;
             }
-        }*/
+        }
     }
     
     return true;
 }
 
 __device__
-bool checkcol(int *grid, int Num, int r, int col, int value)
+bool checkcol(int *grid, int Num, int col)
 {
     bool seen[N];
     
@@ -208,11 +208,11 @@ bool checkcol(int *grid, int Num, int r, int col, int value)
     
     for (int row = 0; row < Num; row++)
     {
-        if ((grid[row * Num + col] == value) && row != r)
+        /*if ((grid[row * Num + col] == value) && row != r)
         {
             return false;
-        }
-        /*int val = grid[row * Num + col];
+        }*/
+        int val = grid[row * Num + col];
         if (val > 0)
         {
             if(seen[val-1])
@@ -223,14 +223,14 @@ bool checkcol(int *grid, int Num, int r, int col, int value)
             {
                 seen[val-1] = true;
             }
-        }*/
+        }
     }
     
     return true;
 }
 
 __device__
-bool checkbox(int *grid, int Num, int box_start_row, int box_start_col, int r, int c, int value)
+bool checkbox(int *grid, int Num, int box_start_row, int box_start_col)
 {
     
     bool seen[N];
@@ -244,11 +244,11 @@ bool checkbox(int *grid, int Num, int box_start_row, int box_start_col, int r, i
     {
         for (int col = box_start_col; col < box_start_col + BLOCK_SIZE; col++)
         {
-            if ((grid[row * Num + col] == value) && (row != r) && (col != c))
+            /*if ((grid[row * Num + col] == value) && (row != r) && (col != c))
             {
                 return false;
-            }
-            /*int val = grid[row * Num + col];
+            }*/
+            int val = grid[row * Num + col];
             if (val > 0)
             {
                 if(seen[val-1])
@@ -259,7 +259,7 @@ bool checkbox(int *grid, int Num, int box_start_row, int box_start_col, int r, i
                 {
                     seen[val-1] = true;
                 }
-            }*/
+            }
             
         }
     }
@@ -268,7 +268,7 @@ bool checkbox(int *grid, int Num, int box_start_row, int box_start_col, int r, i
 }
 
 __device__
-bool isvalid(int *grid, int Num, int row, int col, int value)
+bool isvalid(int *grid, int Num, int row, int col)
 {
     /*if ((grid[row * N + col] < 1) || (grid[row * N + col] > 9)) {
         return false;
@@ -320,7 +320,7 @@ void sudoku_backtrack( int *boards,
             col = currentEmptySpaces[emptyIndex] % N;
  
             
-            if(!isvalid(currentBoard, N, row, col, currentBoard[currentEmptySpaces[emptyIndex]]))
+            if(!isvalid(currentBoard, N, row, col))
             {
                 if(currentBoard[currentEmptySpaces[emptyIndex]] >= 9)
                 {
@@ -575,14 +575,6 @@ cudaBFSKernel(int *old_boards,
                         empty_space_count[next_board_index] = empty_index;
                         new_boards[next_board_index * 81 + row * 9 + col] = attempt;
                         
-                        for (int i = 0; i < N; i++)
-                        {
-                            for (int j = 0; j < N; j++)
-                            {
-                                printf("%d ", new_boards[next_board_index * 81 + i * 9 + j]);
-                            }
-                            printf("\n");
-                        }
                     }
                 }
             }
