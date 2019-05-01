@@ -12,6 +12,85 @@
 #define BLOCK_SIZE 3
 #define UNASSINED 0
 
+__device__
+void clearBitmap(bool *map, int size) {
+    for (int i = 0; i < size; i++) {
+        map[i] = false;
+    }
+}
+
+
+/**
+ * This device checks the entire board to see if it is valid.
+ *
+ * board: this is a N * N sized array that stores the board to check. Rows are stored contiguously,
+ *        so to access row r and col c, use board[r * N + c]
+ */
+__device__
+bool validBoard(const int *board) {
+    bool seen[N];
+    clearBitmap(seen, N);
+    
+    // check if rows are valid
+    for (int i = 0; i < N; i++) {
+        clearBitmap(seen, N);
+        
+        for (int j = 0; j < N; j++) {
+            int val = board[i * N + j];
+            
+            if (val != 0) {
+                if (seen[val - 1]) {
+                    return false;
+                } else {
+                    seen[val - 1] = true;
+                }
+            }
+        }
+    }
+    
+    // check if columns are valid
+    for (int j = 0; j < N; j++) {
+        clearBitmap(seen, N);
+        
+        for (int i = 0; i < N; i++) {
+            int val = board[i * N + j];
+            
+            if (val != 0) {
+                if (seen[val - 1]) {
+                    return false;
+                } else {
+                    seen[val - 1] = true;
+                }
+            }
+        }
+    }
+    
+    // finally check if the sub-boards are valid
+    for (int ridx = 0; ridx < n; ridx++) {
+        for (int cidx = 0; cidx < n; cidx++) {
+            clearBitmap(seen, N);
+            
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    int val = board[(ridx * n + i) * N + (cidx * n + j)];
+                    
+                    if (val != 0) {
+                        if (seen[val - 1]) {
+                            return false;
+                        } else {
+                            seen[val-1] = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    // if we get here, then the board is valid
+    return true;
+}
+
 
 __device__
 bool checkrow(int *grid, int Num, int row, int value)
@@ -71,7 +150,7 @@ bool isvalid(int *grid, int Num, int row, int col, int value)
     }
 }
 
-__global__
+/*__global__
 void sudoku_backtrack( int *boards,
                        const int num_boards,
                        int *empty_spaces,
@@ -106,11 +185,7 @@ void sudoku_backtrack( int *boards,
             
             row = currentEmptySpaces[emptyIndex] / N;
             col = currentEmptySpaces[emptyIndex] % N;
-            
-            if (row < 0 || col < 0)
-            {
-               printf("row = %d, col = %d \n", row, col);
-            }
+ 
             
             if(!isvalid(currentBoard, N, row, col, value))
             {
@@ -145,9 +220,9 @@ void sudoku_backtrack( int *boards,
         
         index += gridDim.x * blockDim.x;
     }
-}
+}*/
 
-/*__global__
+__global__
 void sudoku_backtrack(int *boards,
                      const int numBoards,
                      int *emptySpaces,
@@ -202,7 +277,7 @@ void sudoku_backtrack(int *boards,
         
         index += gridDim.x * blockDim.x;
     }
-}*/
+}
 
 
 void cuda_sudokuBacktrack (const int blocksPerGrid,
