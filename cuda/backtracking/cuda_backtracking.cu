@@ -93,6 +93,73 @@ bool validBoard(const int *board) {
     return true;
 }
 
+__device__
+bool validBoard(const int *board, int changed) {
+    
+    int r = changed / 9;
+    int c = changed % 9;
+    
+    // if changed is less than 0, then just default case
+    if (changed < 0) {
+        return validBoard(board);
+    }
+    
+    if ((board[changed] < 1) || (board[changed] > 9)) {
+        return false;
+    }
+    
+    bool seen[N];
+    clearBitmap(seen, N);
+    
+    // check if row is valid
+    for (int i = 0; i < N; i++) {
+        int val = board[r * N + i];
+        
+        if (val != 0) {
+            if (seen[val - 1]) {
+                return false;
+            } else {
+                seen[val - 1] = true;
+            }
+        }
+    }
+    
+    // check if column is valid
+    clearBitmap(seen, N);
+    for (int j = 0; j < N; j++) {
+        int val = board[j * N + c];
+        
+        if (val != 0) {
+            if (seen[val - 1]) {
+                return false;
+            } else {
+                seen[val - 1] = true;
+            }
+        }
+    }
+    
+    // finally check if the sub-board is valid
+    int ridx = r / n;
+    int cidx = c / n;
+    
+    clearBitmap(seen, N);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            int val = board[(ridx * n + i) * N + (cidx * n + j)];
+            
+            if (val != 0) {
+                if (seen[val - 1]) {
+                    return false;
+                } else {
+                    seen[val - 1] = true;
+                }
+            }
+        }
+    }
+    
+    // if we get here, then the board is valid
+    return true;
+}
 
 __device__
 bool checkrow(int *grid, int Num, int row, int value)
