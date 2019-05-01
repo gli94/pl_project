@@ -107,7 +107,10 @@ void sudoku_backtrack( int *boards,
             row = currentEmptySpaces[emptyIndex] / N;
             col = currentEmptySpaces[emptyIndex] % N;
             
-            printf("row = %d, col = %d \n", row, col);
+            if (row < 0 || col < 0)
+            {
+               printf("row = %d, col = %d \n", row, col);
+            }
             
             if(!isvalid(currentBoard, N, row, col, value))
             {
