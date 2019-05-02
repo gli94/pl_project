@@ -60,7 +60,7 @@ int main()
     int *solved = new int[N * N];
     memset(solved, 0, N * N * sizeof(int));
     
-    cuda_Backtrack(board, solved);
+    cuda_SimAnnealing(board, solved);
     
     printBoard(solved);
     
