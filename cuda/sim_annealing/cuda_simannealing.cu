@@ -1,13 +1,16 @@
 #include <cmath>
 #include <cstdio>
-#include<stdlib.h>
-#include<stdbool.h>
-#include<string.h>
-#include<time.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <time.h>
+#include <math.h>
 
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <driver_functions.h>
+#include <curand.h>
+#include <curand_kernel.h>
 
 #include "cuda_simannealing.cuh"
 
@@ -378,6 +381,21 @@ void cuda_Backtrack(int * board, int * solved)
     cudaFree(dev_solved);
 }*/
 
+__device__ float generate( curandState* globalState, int ind )
+{
+    //int ind = threadIdx.x;
+    curandState localState = globalState[ind];
+    float RANDOM = curand_uniform( &localState );
+    globalState[ind] = localState;
+    return RANDOM;
+}
+
+__global__ void setup_kernel ( curandState * state, unsigned long seed )
+{
+    int id = threadIdx.x;
+    curand_init ( seed, id, 0, &state[id] );
+}
+
 __device__
 bool checkbox(int * grid, int box_start_row, int box_start_col, int value)
 {
@@ -397,7 +415,7 @@ bool checkbox(int * grid, int box_start_row, int box_start_col, int value)
 
 
 __device__
-void rand_init(int * grid)
+void rand_init(int * grid, curandState* globalState, int ind)
 {
     int value;
     
@@ -409,7 +427,8 @@ void rand_init(int * grid)
             {
                 while(1)
                 {
-                    value = (rand() % N) + 1;
+                    //value = (rand() % N) + 1;
+                    value = ((generate(globalState, ind) * 1000000) % N) + 1;
                     if (checkbox(grid, i - i % BLOCK_SIZE, j - j % BLOCK_SIZE, value))
                     {
                         grid[i * N + j] = value;
@@ -480,12 +499,16 @@ int get_cost(int * grid)
 }
 
 __device__
-void gen_candidate(int * grid, int * candidate, int * initial_grid)
+void gen_candidate(int * grid, int * candidate, int * initial_grid, curandState* globalState, int ind)
 {
     
-    cudaMemcpy(candidate, grid, N * N * sizeof(int), cudaMemcpyDeviceToDevice);
+    //cudaMemcpy(candidate, grid, N * N * sizeof(int), cudaMemcpyDeviceToDevice);
+    for (int i = 0; i < N * N; i++)
+    {
+        candidate[i] = grid[i];
+    }
     
-    int blockIdx = rand() % N;
+    int blockIdx = 0;
     int element1_index = 0;
     int element2_index = 0;
     int row1 = 0;
@@ -499,7 +522,8 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid)
     {
         
         empty_element_cnt = 0;
-        blockIdx = rand() % N;
+        //blockIdx = rand() % N;
+        blockIdx = (generate(globalState, ind) * 1000000) % N;
         
         for (int i = 0; i < BLOCK_SIZE; i++)
         {
@@ -517,7 +541,8 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid)
         
         if (empty_element_cnt == 0)
         {
-            blockIdx = rand() % N;
+            //blockIdx = rand() % N;
+             blockIdx = (generate(globalState, ind) * 1000000) % N;
         }
         else
         {
@@ -544,8 +569,10 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid)
     
     while(1)
     {
-        element1_index = rand() % N;
-        element2_index = rand() % N;
+        //element1_index = rand() % N;
+        //element2_index = rand() % N;
+        element1_index = (generate(globalState, ind) * 1000000) % N;
+        element2_index = (generate(globalState, ind) * 1000000) % N;
         row1 = (blockIdx / BLOCK_SIZE) * BLOCK_SIZE + element1_index / BLOCK_SIZE;
         col1 = (blockIdx % BLOCK_SIZE) * BLOCK_SIZE + element1_index % BLOCK_SIZE;
         row2 = (blockIdx / BLOCK_SIZE) * BLOCK_SIZE + element2_index / BLOCK_SIZE;
@@ -585,7 +612,8 @@ void cuda_sim_annealing(int *grid,
                         int *candidate,
                         int *initial_grid,
                         int *finished,
-                        int *solved)
+                        int *solved,
+                        curandState* devStates)
 {
     
     int index = blockDim.x * blockIdx.x + threadIdx.x;
@@ -611,9 +639,9 @@ void cuda_sim_annealing(int *grid,
     
         //printf("Update grid done !\n");
     
-        srand(time(NULL));
+        //srand(time(NULL));
     
-        rand_init(current_grid);
+        rand_init(current_grid, devStates, index);
     
        //printf("Rand init done !\n");
        /*printgrid(grid);
@@ -622,7 +650,7 @@ void cuda_sim_annealing(int *grid,
     
     while(count < MAX_ITER)
     {
-        gen_candidate(current_grid, current_candidate, current_initial_grid);
+        gen_candidate(current_grid, current_candidate, current_initial_grid, devStates, index);
         //printf("Gen candidate done !\n");
         current_cost = get_cost(current_grid);
         candidate_cost = get_cost(current_candidate);
@@ -633,7 +661,7 @@ void cuda_sim_annealing(int *grid,
          printf("candidate_cost = %d\n", candidate_cost);
          printf("\n");*/
         
-        if (exp(delta_cost / T) > ((float)(rand()) / RAND_MAX))
+        if (exp(delta_cost / T) > /*((float)(rand()) / RAND_MAX))*/ generate(devStates, index))
         {
             //printf("update!\n");
             //printgrid(candidate);
@@ -676,15 +704,23 @@ void callSAKernel (const int blocksPerGrid,
                    int *candidate,
                    int *initial_grid,
                    int *finished,
-                   int *solved)
+                   int *solved,
+                   curandState* devStates)
 {
-    cuda_sim_annealing<<<blocksPerGrid, threadsPerBlock>>>(grid, num_boards, candidate, initial_grid, finished, solved);
+    cuda_sim_annealing<<<blocksPerGrid, threadsPerBlock>>>(grid, num_boards, candidate, initial_grid, finished, solved, devStates);
 }
 
 void cuda_SimAnnealing(int * board, int * solved)
 {
     int blocksPerGrid = 1024;
     int threadsPerBlock = 256;
+    
+    curandState* devStates;
+    cudaMalloc ( &devStates, blocksPerGrid * threadsPerBlock *sizeof( curandState ) );
+    
+    setup_kernel <<< 1, blocksPerGrid * threadsPerBlock >>> ( devStates,unsigned(time(NULL)) );
+    
+    
     
     int *grids;
     int *candidate;
@@ -764,7 +800,7 @@ void cuda_SimAnnealing(int * board, int * solved)
     }*/
     
     //cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
-    callSAKernel (blocksPerGrid, threadsPerBlock, grid, total_boards, candidate, initial_grid, dev_finished, dev_solved);
+    callSAKernel (blocksPerGrid, threadsPerBlock, grid, total_boards, candidate, initial_grid, dev_finished, dev_solved, devStates);
     
     cudaMemcpy(solved, dev_solved, N * N * sizeof(int), cudaMemcpyDeviceToHost);
     
