@@ -1,7 +1,7 @@
 EXECUTABLE := cudaBacktracking
 #EXECUTABLE_UVM := cudaSaxpyUvm
 #EXECUTABLE_STREAM := cudaSaxpyStream
-CU_FILES   := cuda_backtracking.cu 
+CU_FILES   := cuda_simannealing.cu 
 CU_DEPS    :=
 CC_FILES   := main.cc
 
@@ -47,8 +47,8 @@ NVCC_FLAGS=-O3 -m64 $(GENCODE_FLAGS) $(INC_FLAGS)
 
 
 COMMON_OBJS=$(OBJDIR)/main.o 
-OBJS_BASIC=$(COMMON_OBJS) $(OBJDIR)/cuda_backtracking.o 
-#OBJS_BASIC=$(OBJDIR)/cuda_backtracking.o 
+OBJS_BASIC=$(COMMON_OBJS) $(OBJDIR)/cuda_simannealing.o 
+#OBJS_BASIC=$(OBJDIR)/cuda_simannealing.o 
 #OBJS_STREAM=$(COMMON_OBJS) $(OBJDIR)/saxpy_stream.o 
 #OBJS_UVM=$(COMMON_OBJS) $(OBJDIR)/saxpy_uvm.o 
 
