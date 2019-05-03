@@ -718,8 +718,9 @@ void cuda_SimAnnealing(int * board, int * solved)
     curandState* devStates;
     cudaMalloc ( &devStates, blocksPerGrid * threadsPerBlock *sizeof( curandState ) );
     
+    printf("Seg fault1!\n");
     setup_kernel <<< 1, blocksPerGrid * threadsPerBlock >>> ( devStates,unsigned(time(NULL)) );
-    
+    printf("Seg fault2!\n");
     
     
     int *grids;
