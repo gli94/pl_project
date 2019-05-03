@@ -428,7 +428,7 @@ void rand_init(int * grid, curandState* globalState, int ind)
                 while(1)
                 {
                     //value = (rand() % N) + 1;
-                    value = ((generate(globalState, ind) * 1000000) % N) + 1;
+                    value = (((int) (generate(globalState, ind) * 1000000)) % N) + 1;
                     if (checkbox(grid, i - i % BLOCK_SIZE, j - j % BLOCK_SIZE, value))
                     {
                         grid[i * N + j] = value;
@@ -523,7 +523,7 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid, curandState*
         
         empty_element_cnt = 0;
         //blockIdx = rand() % N;
-        blockIdx = (generate(globalState, ind) * 1000000) % N;
+        blockIdx = (int) (generate(globalState, ind) * 1000000) % N;
         
         for (int i = 0; i < BLOCK_SIZE; i++)
         {
@@ -542,7 +542,7 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid, curandState*
         if (empty_element_cnt == 0)
         {
             //blockIdx = rand() % N;
-             blockIdx = (generate(globalState, ind) * 1000000) % N;
+             blockIdx = (int) (generate(globalState, ind) * 1000000) % N;
         }
         else
         {
@@ -571,8 +571,8 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid, curandState*
     {
         //element1_index = rand() % N;
         //element2_index = rand() % N;
-        element1_index = (generate(globalState, ind) * 1000000) % N;
-        element2_index = (generate(globalState, ind) * 1000000) % N;
+        element1_index = (int) (generate(globalState, ind) * 1000000) % N;
+        element2_index = (int) (generate(globalState, ind) * 1000000) % N;
         row1 = (blockIdx / BLOCK_SIZE) * BLOCK_SIZE + element1_index / BLOCK_SIZE;
         col1 = (blockIdx % BLOCK_SIZE) * BLOCK_SIZE + element1_index % BLOCK_SIZE;
         row2 = (blockIdx / BLOCK_SIZE) * BLOCK_SIZE + element2_index / BLOCK_SIZE;
@@ -680,7 +680,7 @@ void cuda_sim_annealing(int *grid,
             
             for (int i = 0; i < N * N; i++)
             {
-                solved[i] = currentBoard[i];
+                solved[i] = current_grid[i];
             }
             
             break;
@@ -746,8 +746,8 @@ void cuda_SimAnnealing(int * board, int * solved)
     //cudaMemset(board_index, 0, sizeof(int));
     //cudaMemset(new_boards, 0, sk * sizeof(int));
     cudaMemset(grids, 0, total_boards * N * N * sizeof(int));
-    cudaMemset(candidate, 0, total_boards * N * N sizeof(int));
-    cudaMemset(initial_grid, 0, total_boards * N * N sizeof(int));
+    cudaMemset(candidate, 0, total_boards * N * N * sizeof(int));
+    cudaMemset(initial_grid, 0, total_boards * N * N * sizeof(int));
     
     cudaMemcpy(grids, board, N * N * sizeof(int), cudaMemcpyHostToDevice);
     
@@ -800,15 +800,13 @@ void cuda_SimAnnealing(int * board, int * solved)
     }*/
     
     //cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
-    callSAKernel (blocksPerGrid, threadsPerBlock, grid, total_boards, candidate, initial_grid, dev_finished, dev_solved, devStates);
+    callSAKernel (blocksPerGrid, threadsPerBlock, grids, total_boards, candidate, initial_grid, dev_finished, dev_solved, devStates);
     
     cudaMemcpy(solved, dev_solved, N * N * sizeof(int), cudaMemcpyDeviceToHost);
     
-    cudaFree(empty_spaces);
-    cudaFree(empty_space_count);
-    cudaFree(new_boards);
-    cudaFree(old_boards);
-    cudaFree(board_index);
+    cudaFree(grids);
+    cudaFree(candidate);
+    cudaFree(initial_grid);
     
     cudaFree(dev_finished);
     cudaFree(dev_solved);

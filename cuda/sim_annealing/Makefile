@@ -1,4 +1,4 @@
-EXECUTABLE := cudaBacktracking
+EXECUTABLE := cudaSimAnnealing
 #EXECUTABLE_UVM := cudaSaxpyUvm
 #EXECUTABLE_STREAM := cudaSaxpyStream
 CU_FILES   := cuda_simannealing.cu 
