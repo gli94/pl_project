@@ -718,9 +718,9 @@ void cuda_SimAnnealing(int * board, int * solved)
     curandState* devStates;
     cudaMalloc ( &devStates, blocksPerGrid * threadsPerBlock *sizeof( curandState ) );
     
-    printf("Seg fault1!\n");
+ 
     setup_kernel <<< 1, blocksPerGrid * threadsPerBlock >>> ( devStates,unsigned(time(NULL)) );
-    printf("Seg fault2!\n");
+
     
     
     int *grids;
@@ -751,12 +751,14 @@ void cuda_SimAnnealing(int * board, int * solved)
     cudaMemset(initial_grid, 0, total_boards * N * N * sizeof(int));
     
     cudaMemcpy(grids, board, N * N * sizeof(int), cudaMemcpyHostToDevice);
+    printf("Seg fault1!\n");
     
     for (int i = 1; i < total_boards; i++)
     {
         for (int j = 0; j < N * N; j++)
         {
             grids[i * N * N + j] = grids[j];
+            printf("Seg fault2!\n");
         }
     }
             
