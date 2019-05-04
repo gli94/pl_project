@@ -760,7 +760,7 @@ void cuda_SimAnnealing(int * board, int * solved)
         }
     }*/
     
-    for (int j = 0; j < N * N; j++)
+    for (int j = 0; j < N * N * total_boards; j++)
     {
         grids[j] = grids[j];
     }
