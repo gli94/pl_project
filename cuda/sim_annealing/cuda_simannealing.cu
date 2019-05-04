@@ -752,19 +752,19 @@ void cuda_SimAnnealing(int * board, int * solved)
     
     cudaMemcpy(grids, board, N * N * sizeof(int), cudaMemcpyHostToDevice);
     
-    for (int i = 1; i < total_boards; i++)
+    /*for (int i = 1; i < total_boards; i++)
     {
         for (int j = 0; j < N * N; j++)
         {
             //grids[i * N * N + j] = grids[j];
             printf("%d\n ", grids[i*N*N + j]);
         }
-    }
-    
-    /*for (int j = 0; j < N * N * total_boards; j++)
-    {
-        grids[j] = grids[j];
     }*/
+    
+    for (int j = 0; j < N * N * total_boards; j++)
+    {
+        printf("%d\n ", grids[j]);
+    }
             
     
     //callBFSKernel(blocksPerGrid, threadsPerBlock, old_boards, new_boards, total_boards, board_index, empty_spaces, empty_space_count);
