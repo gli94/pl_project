@@ -438,7 +438,7 @@ void rand_init(int * grid, curandState* globalState, int ind)
                         break;
                     }
                 }
-                printf("randinit done!\n");
+                //printf("randinit done!\n");
             }
         }
     }
@@ -670,7 +670,7 @@ void cuda_sim_annealing(int *grid,
     
         rand_init(current_grid, devStates, index);
     
-       //printf("Rand init done !\n");
+       printf("Rand init done !\n");
        /*printgrid(grid);
      
        printf("Initial cost = %d\n", get_cost(grid));*/
