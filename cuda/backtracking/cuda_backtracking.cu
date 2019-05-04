@@ -625,7 +625,7 @@ void cuda_Backtrack(int * board, int * solved)
     
     double startGPUTime = CycleTimer::currentSeconds();
     callBFSKernel(blocksPerGrid, threadsPerBlock, old_boards, new_boards, total_boards, board_index, empty_spaces, empty_space_count);
-    
+    double endGPUTimeBFS = CycleTimer::currentSeconds();
     
     int host_count;
     
@@ -671,6 +671,7 @@ void cuda_Backtrack(int * board, int * solved)
     
     printf("Execution time: %lfs\n", timeKernel);
     printf("Backtracking kernel time: %lfs\n", endGPUTime - startGPUTime1);
+    printf("BFS kernel time: %lfs\n", endGPUTimeBFS-startGPUTime);
     
     //int *solved = new int[N * N];
     //memset(solved, 0, N * N * sizeof(int));
