@@ -51,7 +51,7 @@ int main()
     int blocksPerGrid = 1024;
     int threadsPerBlock = 256;
     
-    char filename[] = "sudoku_board_hard.txt";
+    char filename[] = "sudoku_board.txt";
     
     int *board = new int[N * N];
     
