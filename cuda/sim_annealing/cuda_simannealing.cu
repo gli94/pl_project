@@ -691,7 +691,7 @@ void cuda_sim_annealing(int *grid,
         delta_cost = (float)(current_cost - candidate_cost);
         
          //printf("Iteration #%d:\n", count);
-         printf("current_cost = %d\n", current_cost);
+         //printf("current_cost = %d\n", current_cost);
          //printf("candidate_cost = %d\n", candidate_cost);
          //printf("\n");
         
