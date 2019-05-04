@@ -431,13 +431,14 @@ void rand_init(int * grid, curandState* globalState, int ind)
                     //value = (((int) (generate(globalState, ind) * 1000000)) % N) + 1;
                     //printf("Stuck1!\n");
                     value = curand(&globalState[ind]) % N + 1;
-                    printf("value=%d\n", value);
+                    //printf("value=%d\n", value);
                     if (checkbox(grid, i - i % BLOCK_SIZE, j - j % BLOCK_SIZE, value))
                     {
                         grid[i * N + j] = value;
                         break;
                     }
                 }
+                printf("randinit done!\n");
             }
         }
     }
