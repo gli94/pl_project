@@ -747,7 +747,7 @@ void callSAKernel (const int blocksPerGrid,
 
 void cuda_SimAnnealing(int * board, int * solved)
 {
-    int blocksPerGrid = 1024;
+    int blocksPerGrid = 128;
     int threadsPerBlock = 256;
     
     curandState* devStates;
@@ -848,7 +848,7 @@ void cuda_SimAnnealing(int * board, int * solved)
     double startGPUTime = CycleTimer::currentSeconds();
     
     callSAKernel (blocksPerGrid, threadsPerBlock, grids, total_boards, candidate, initial_grid, dev_finished, dev_solved, devStates);
-     //cudaDeviceSynchronize();
+     cudaDeviceSynchronize();
     
     double endGPUTime = CycleTimer::currentSeconds();
     double timeKernel = endGPUTime - startGPUTime;
