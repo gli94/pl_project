@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#include <sys/time.h>
 
 #include <cuda.h>
 #include <cuda_runtime.h>
@@ -419,6 +420,9 @@ void rand_init(int * grid, curandState* globalState, int ind)
 {
     int value;
     
+    curandState state;
+    curand_init(clock64(), ind, 0, &state);
+    
     for (int i = 0; i < N; i++)
     {
         for (int j = 0; j < N; j++)
@@ -430,7 +434,7 @@ void rand_init(int * grid, curandState* globalState, int ind)
                     //value = (rand() % N) + 1;
                     //value = (((int) (generate(globalState, ind) * 1000000)) % N) + 1;
                     //printf("Stuck1!\n");
-                    value = curand(&globalState[ind]) % N + 1;
+                    value = curand(&state) % N + 1;
                     //printf("value=%d\n", value);
                     if (checkbox(grid, i - i % BLOCK_SIZE, j - j % BLOCK_SIZE, value))
                     {
@@ -522,13 +526,15 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid, curandState*
     
     int empty_element_cnt = 0;
     
+    curandState state;
+    curand_init(clock64(), ind, 0, &state);
     while(1)
     {
         
         empty_element_cnt = 0;
         //blockIdx = rand() % N;
         //blockIdx = (int) (generate(globalState, ind) * 1000000) % N;
-        blockIdx = curand(&globalState[ind]) % N;
+        blockIdx = curand(&state) % N;
         //printf("Stuck2!\n");
         
         for (int i = 0; i < BLOCK_SIZE; i++)
@@ -549,7 +555,7 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid, curandState*
         {
             //blockIdx = rand() % N;
             //blockIdx = (int) (generate(globalState, ind) * 1000000) % N;
-            blockIdx = curand(&globalState[ind]) % N;
+            blockIdx = curand(&state) % N;
         }
         else
         {
@@ -573,6 +579,7 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid, curandState*
         return;
     }
     
+    curand_init(clock64(), ind, 0, &state);
     
     while(1)
     {
@@ -581,8 +588,8 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid, curandState*
         //printf("Stuck3!\n");
         //element1_index = (int) (generate(globalState, ind) * 1000000) % N;
         //element2_index = (int) (generate(globalState, ind) * 1000000) % N;
-        element1_index = curand(&globalState[ind]) % N;
-        element2_index = curand(&globalState[ind]) % N;
+        element1_index = curand(&state) % N;
+        element2_index = curand(&state) % N;
         row1 = (blockIdx / BLOCK_SIZE) * BLOCK_SIZE + element1_index / BLOCK_SIZE;
         col1 = (blockIdx % BLOCK_SIZE) * BLOCK_SIZE + element1_index % BLOCK_SIZE;
         row2 = (blockIdx / BLOCK_SIZE) * BLOCK_SIZE + element2_index / BLOCK_SIZE;
@@ -660,7 +667,7 @@ void cuda_sim_annealing(int *grid,
         float T = TEMP;
         int count  = 0;
         
-        curand_init (index, index, 0, &devStates[index]);
+        curand_init(clock64(), index, 0, &devStates[index]);
     
         update_grid(current_initial_grid, current_grid);
     
