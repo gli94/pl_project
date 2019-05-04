@@ -857,14 +857,14 @@ void cuda_SimAnnealing(int * board, int * solved)
     
     cudaMemcpy(solved, dev_solved, N * N * sizeof(int), cudaMemcpyDeviceToHost);
     
-    for (int i = 0; i < N; i++)
+    /*for (int i = 0; i < N; i++)
     {
         for (int j = 0; j < N; j++)
         {
             printf("%d ", solved[i*N + j]);
         }
         printf("\n");
-    }
+    }*/
     
     double endGPUTime2 = CycleTimer::currentSeconds();
     
