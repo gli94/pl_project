@@ -529,7 +529,7 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid, curandState*
         //blockIdx = rand() % N;
         //blockIdx = (int) (generate(globalState, ind) * 1000000) % N;
         blockIdx = curand(&globalState[ind]) % N;
-        printf("Stuck2!\n");
+        //printf("Stuck2!\n");
         
         for (int i = 0; i < BLOCK_SIZE; i++)
         {
@@ -578,7 +578,7 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid, curandState*
     {
         //element1_index = rand() % N;
         //element2_index = rand() % N;
-        printf("Stuck3!\n");
+        //printf("Stuck3!\n");
         //element1_index = (int) (generate(globalState, ind) * 1000000) % N;
         //element2_index = (int) (generate(globalState, ind) * 1000000) % N;
         element1_index = curand(&globalState[ind]) % N;
@@ -670,7 +670,7 @@ void cuda_sim_annealing(int *grid,
     
         rand_init(current_grid, devStates, index);
     
-       printf("Rand init done !\n");
+       //printf("Rand init done !\n");
        /*printgrid(grid);
      
        printf("Initial cost = %d\n", get_cost(grid));*/
@@ -683,10 +683,10 @@ void cuda_sim_annealing(int *grid,
         candidate_cost = get_cost(current_candidate);
         delta_cost = (float)(current_cost - candidate_cost);
         
-        /*printf("Iteration #%d:\n", count);
+         printf("Iteration #%d:\n", count);
          printf("current_cost = %d\n", current_cost);
          printf("candidate_cost = %d\n", candidate_cost);
-         printf("\n");*/
+         printf("\n");
         
         if (exp(delta_cost / T) > /*((float)(rand()) / RAND_MAX))*/ generate(devStates, index))
         {
