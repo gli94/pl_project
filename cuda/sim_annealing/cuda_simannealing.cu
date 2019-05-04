@@ -747,7 +747,7 @@ void callSAKernel (const int blocksPerGrid,
 
 void cuda_SimAnnealing(int * board, int * solved)
 {
-    int blocksPerGrid = 2048;
+    int blocksPerGrid = 1024;
     int threadsPerBlock = 256;
     
     curandState* devStates;
