@@ -833,7 +833,7 @@ void cuda_SimAnnealing(int * board, int * solved)
     int *dev_solved;
     
     cudaMalloc(&dev_finished, sizeof(int));
-    cudaMalloc(&dev_solved, N * N * sizeof(int));
+    cudaMallocHost(&dev_solved, N * N * sizeof(int));
     
     cudaMemset(dev_finished, 0, sizeof(int));
     cudaMemcpy(dev_solved, board, N * N * sizeof(int), cudaMemcpyHostToDevice);
