@@ -682,7 +682,7 @@ void cuda_sim_annealing(int *grid,
      
        printf("Initial cost = %d\n", get_cost(grid));*/
     
-    while(count < MAX_ITER)
+    while((count < MAX_ITER) && (*finished == 0))
     {
         gen_candidate(current_grid, current_candidate, current_initial_grid, devStates, index);
         //printf("Gen candidate done !\n");
