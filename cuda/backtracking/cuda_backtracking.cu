@@ -664,11 +664,13 @@ void cuda_Backtrack(int * board, int * solved)
         new_boards = old_boards;
     }
     
+     double startGPUTime1 = CycleTimer::currentSeconds();
     cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
     double endGPUTime = CycleTimer::currentSeconds();
     double timeKernel = endGPUTime - startGPUTime;
     
     printf("Execution time: %lfs\n", timeKernel);
+    printf("Backtracking kernel time: %lfs\n", endGPUTime - startGPUTime1);
     
     //int *solved = new int[N * N];
     //memset(solved, 0, N * N * sizeof(int));
