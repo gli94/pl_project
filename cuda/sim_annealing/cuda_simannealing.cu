@@ -22,7 +22,7 @@
 #define UNASSIGNED 0
 #define TEMP 0.5
 #define ALPHA 0.99999
-#define MAX_ITER 1000000
+#define MAX_ITER 100000
 
 /*__device__
 bool checkrow(int *grid, int Num, int row)
@@ -848,7 +848,7 @@ void cuda_SimAnnealing(int * board, int * solved)
     double startGPUTime = CycleTimer::currentSeconds();
     
     callSAKernel (blocksPerGrid, threadsPerBlock, grids, total_boards, candidate, initial_grid, dev_finished, dev_solved, devStates);
-     cudaDeviceSynchronize();
+     //cudaDeviceSynchronize();
     
     double endGPUTime = CycleTimer::currentSeconds();
     double timeKernel = endGPUTime - startGPUTime;
