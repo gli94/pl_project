@@ -6,7 +6,7 @@
 #include <driver_functions.h>
 
 #include "cuda_backtracking.cuh"
-
+#include "CycleTimer.h"
 
 #define N 9
 #define BLOCK_SIZE 3
@@ -623,7 +623,9 @@ void cuda_Backtrack(int * board, int * solved)
     
     cudaMemcpy(old_boards, board, N * N * sizeof(int), cudaMemcpyHostToDevice);
     
+    double startGPUTime = CycleTimer::currentSeconds();
     callBFSKernel(blocksPerGrid, threadsPerBlock, old_boards, new_boards, total_boards, board_index, empty_spaces, empty_space_count);
+    
     
     int host_count;
     
@@ -663,10 +665,17 @@ void cuda_Backtrack(int * board, int * solved)
     }
     
     cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
+    double endGPUTime = CycleTimer::currentSeconds();
+    double timeKernel = endGPUTime - startGPUTime;
+    
+    printf("Execution time: %lfs\n", timeKernel);
     
     //int *solved = new int[N * N];
     //memset(solved, 0, N * N * sizeof(int));
     cudaMemcpy(solved, dev_solved, N * N * sizeof(int), cudaMemcpyDeviceToHost);
+    double endGPUTime2 = CycleTimer::currentSeconds();
+    
+    printf("Memcpy time: %lfs\n", endGPUTime2-endGPUTime);
     //printBoard(solved);
     
     //delete[] board;
