@@ -655,9 +655,7 @@ void cuda_sim_annealing(int *grid,
     int *current_candidate;
     int *current_initial_grid;
     
-    int dev_finished = 0;
-    
-    while((dev_finished == 0) && (index < num_boards))
+    while((*finished == 0) && (index < num_boards))
     {
         
         current_grid = grid + index * N * N;
@@ -685,7 +683,7 @@ void cuda_sim_annealing(int *grid,
      
        printf("Initial cost = %d\n", get_cost(grid));*/
     
-    while((count < MAX_ITER) && (dev_finished == 0))
+    while((count < MAX_ITER) && (*finished == 0))
     {
         gen_candidate(current_grid, current_candidate, current_initial_grid, devStates, index);
         //printf("Gen candidate done !\n");
@@ -711,7 +709,6 @@ void cuda_sim_annealing(int *grid,
         if (candidate_cost == (-2) * N * N)
         {
             *finished = 1;
-            dev_finished = 1;
             update_grid(current_grid, current_candidate);
             
             printf("Finished!\n");
@@ -851,7 +848,7 @@ void cuda_SimAnnealing(int * board, int * solved)
     double startGPUTime = CycleTimer::currentSeconds();
     
     callSAKernel (blocksPerGrid, threadsPerBlock, grids, total_boards, candidate, initial_grid, dev_finished, dev_solved, devStates);
-     cudaDeviceSynchronize();
+     //cudaDeviceSynchronize();
     
     double endGPUTime = CycleTimer::currentSeconds();
     double timeKernel = endGPUTime - startGPUTime;
