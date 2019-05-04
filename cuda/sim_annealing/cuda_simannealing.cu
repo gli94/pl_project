@@ -613,13 +613,16 @@ void update_grid(int * grid, int * candidate)
 __global__
 void init_memory(int * grids, int total_boards)
 {
-    for (int i = 1; i < total_boards; i++)
+    int index = blockDim.x * blockIdx.x + threadIdx.x;
+    
+    if (index < total_boards)
     {
         for (int j = 0; j < N * N; j++)
         {
-            grids[i * N * N + j] = grids[j];
+            grids[index * N * N + j] = grids[j];
         }
     }
+    
 }
 
 __global__
@@ -777,7 +780,7 @@ void cuda_SimAnnealing(int * board, int * solved)
         }
     }*/
     
-    init_memory<<<1, 1>>>(grids, total_boards);
+    init_memory<<<blocksPerGrid, threadsPerBlock>>>(grids, total_boards);
     
     /*for (int j = 0; j < N * N; j++)
     {
