@@ -726,7 +726,7 @@ void cuda_sim_annealing(int *grid,
         
     index += gridDim.x * blockDim.x;
     //printf("final cost = %d\n", current_cost);
-    printf("Iterations: %d \n", count);
+    //printf("Iterations: %d \n", count);
     
     }
 }
@@ -746,7 +746,7 @@ void callSAKernel (const int blocksPerGrid,
 
 void cuda_SimAnnealing(int * board, int * solved)
 {
-    int blocksPerGrid = 2048;
+    int blocksPerGrid = 1024;
     int threadsPerBlock = 256;
     
     curandState* devStates;
