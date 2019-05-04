@@ -683,10 +683,10 @@ void cuda_sim_annealing(int *grid,
         candidate_cost = get_cost(current_candidate);
         delta_cost = (float)(current_cost - candidate_cost);
         
-         printf("Iteration #%d:\n", count);
+         /*printf("Iteration #%d:\n", count);
          printf("current_cost = %d\n", current_cost);
          printf("candidate_cost = %d\n", candidate_cost);
-         printf("\n");
+         printf("\n");*/
         
         if (exp(delta_cost / T) > /*((float)(rand()) / RAND_MAX))*/ generate(devStates, index))
         {
