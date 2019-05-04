@@ -688,7 +688,7 @@ void cuda_sim_annealing(int *grid,
          printf("candidate_cost = %d\n", candidate_cost);
          printf("\n");*/
         
-        if (exp(delta_cost / T) > /*((float)(rand()) / RAND_MAX))*/ generate(devStates, index))
+        if (exp(delta_cost / T) > curand_uniform(&devStates[index]))
         {
             //printf("update!\n");
             //printgrid(candidate);
