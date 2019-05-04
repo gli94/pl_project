@@ -751,15 +751,18 @@ void cuda_SimAnnealing(int * board, int * solved)
     cudaMemset(initial_grid, 0, total_boards * N * N * sizeof(int));
     
     cudaMemcpy(grids, board, N * N * sizeof(int), cudaMemcpyHostToDevice);
-    printf("Seg fault1!\n");
     
-    for (int i = 1; i < total_boards; i++)
+    /*for (int i = 1; i < total_boards; i++)
     {
         for (int j = 0; j < N * N; j++)
         {
             grids[i * N * N + j] = grids[j];
-            printf("Seg fault2!\n");
         }
+    }*/
+    
+    for (int j = 0; j < N * N; j++)
+    {
+        grids[j] = grids[j];
     }
             
     
