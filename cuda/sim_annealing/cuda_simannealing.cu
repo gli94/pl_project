@@ -856,6 +856,9 @@ void cuda_SimAnnealing(int * board, int * solved)
     printf("Execution time: %lf\n", timeKernel);
     
     cudaMemcpy(solved, dev_solved, N * N * sizeof(int), cudaMemcpyDeviceToHost);
+    double endGPUTime2 = CycleTimer::currentSeconds();
+    
+    printf("Memcpy time: %lf\n", endGPUTime2-endGPUTime);
     
     cudaFree(grids);
     cudaFree(candidate);
