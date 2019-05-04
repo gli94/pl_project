@@ -833,7 +833,7 @@ void cuda_SimAnnealing(int * board, int * solved)
     int *dev_solved;
     
     cudaMalloc(&dev_finished, sizeof(int));
-    cudaMallocHost(&dev_solved, N * N * sizeof(int));
+    cudaMalloc(&dev_solved, N * N * sizeof(int));
     
     cudaMemset(dev_finished, 0, sizeof(int));
     cudaMemcpy(dev_solved, board, N * N * sizeof(int), cudaMemcpyHostToDevice);
@@ -856,6 +856,16 @@ void cuda_SimAnnealing(int * board, int * solved)
     printf("Execution time: %lfs\n", timeKernel);
     
     cudaMemcpy(solved, dev_solved, N * N * sizeof(int), cudaMemcpyDeviceToHost);
+    
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            printf("%d ", solved[i*N + j]);
+        }
+        printf("\n");
+    }
+    
     double endGPUTime2 = CycleTimer::currentSeconds();
     
     printf("Memcpy time: %lfs\n", endGPUTime2-endGPUTime);
