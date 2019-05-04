@@ -429,6 +429,7 @@ void rand_init(int * grid, curandState* globalState, int ind)
                 {
                     //value = (rand() % N) + 1;
                     value = (((int) (generate(globalState, ind) * 1000000)) % N) + 1;
+                    printf("Stuck1!\n");
                     if (checkbox(grid, i - i % BLOCK_SIZE, j - j % BLOCK_SIZE, value))
                     {
                         grid[i * N + j] = value;
@@ -524,6 +525,7 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid, curandState*
         empty_element_cnt = 0;
         //blockIdx = rand() % N;
         blockIdx = (int) (generate(globalState, ind) * 1000000) % N;
+        printf("Stuck2!\n");
         
         for (int i = 0; i < BLOCK_SIZE; i++)
         {
@@ -571,6 +573,7 @@ void gen_candidate(int * grid, int * candidate, int * initial_grid, curandState*
     {
         //element1_index = rand() % N;
         //element2_index = rand() % N;
+        printf("Stuck3!\n");
         element1_index = (int) (generate(globalState, ind) * 1000000) % N;
         element2_index = (int) (generate(globalState, ind) * 1000000) % N;
         row1 = (blockIdx / BLOCK_SIZE) * BLOCK_SIZE + element1_index / BLOCK_SIZE;
