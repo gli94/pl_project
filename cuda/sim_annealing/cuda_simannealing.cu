@@ -13,6 +13,7 @@
 #include <curand.h>
 #include <curand_kernel.h>
 
+#include "CycleTimer.h"
 #include "cuda_simannealing.cuh"
 
 
@@ -843,7 +844,15 @@ void cuda_SimAnnealing(int * board, int * solved)
     }*/
     
     //cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
+    
+    double startGPUTime = CycleTimer::currentSeconds();
+    
     callSAKernel (blocksPerGrid, threadsPerBlock, grids, total_boards, candidate, initial_grid, dev_finished, dev_solved, devStates);
+    
+    double endGPUTime = CycleTimer::currentSeconds();
+    double timeKernel = endGPUTime - startGPUTime;
+    
+    printf("Execution time: %llf\n", timeKernel);
     
     cudaMemcpy(solved, dev_solved, N * N * sizeof(int), cudaMemcpyDeviceToHost);
     
