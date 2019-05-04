@@ -607,6 +607,18 @@ void update_grid(int * grid, int * candidate)
 }
 
 __global__
+void init_memory(int * grid)
+{
+    for (int i = 1; i < total_boards; i++)
+    {
+        for (int j = 0; j < N * N; j++)
+        {
+            grids[i * N * N + j] = grids[j];
+        }
+    }
+}
+
+__global__
 void cuda_sim_annealing(int *grid,
                         const int num_boards,
                         int *candidate,
@@ -761,10 +773,12 @@ void cuda_SimAnnealing(int * board, int * solved)
         }
     }*/
     
-    for (int j = 0; j < N * N; j++)
+    init_memory(grids);
+    
+    /*for (int j = 0; j < N * N; j++)
     {
         printf("%d\n ", grids[j]);
-    }
+    }*/
             
     
     //callBFSKernel(blocksPerGrid, threadsPerBlock, old_boards, new_boards, total_boards, board_index, empty_spaces, empty_space_count);
