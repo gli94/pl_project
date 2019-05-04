@@ -848,17 +848,17 @@ void cuda_SimAnnealing(int * board, int * solved)
     double startGPUTime = CycleTimer::currentSeconds();
     
     callSAKernel (blocksPerGrid, threadsPerBlock, grids, total_boards, candidate, initial_grid, dev_finished, dev_solved, devStates);
-     //cudaDeviceSynchronize();
+     cudaDeviceSynchronize();
     
     double endGPUTime = CycleTimer::currentSeconds();
     double timeKernel = endGPUTime - startGPUTime;
     
-    printf("Execution time: %lf\n", timeKernel);
+    printf("Execution time: %lfs\n", timeKernel);
     
     cudaMemcpy(solved, dev_solved, N * N * sizeof(int), cudaMemcpyDeviceToHost);
     double endGPUTime2 = CycleTimer::currentSeconds();
     
-    printf("Memcpy time: %lf\n", endGPUTime2-endGPUTime);
+    printf("Memcpy time: %lfs\n", endGPUTime2-endGPUTime);
     
     cudaFree(grids);
     cudaFree(candidate);
