@@ -52,7 +52,7 @@ void printBoard(int *board) {
 int main()
 {
     
-    char filename[] = "sudoku_9x9_100_10.txt";
+    char filename[] = "sudoku_9x9_100_40.txt";
     
     int *data = new int [MAXL * N];
     
@@ -81,7 +81,7 @@ int main()
     printBoard(solved);
     }
     
-    FILE * f = fopen("bt_stats_bench_9x9_100_10.txt", "w");
+    FILE * f = fopen("bt_stats_bench_9x9_100_40.txt", "w");
     
     if (f == NULL)
     {
