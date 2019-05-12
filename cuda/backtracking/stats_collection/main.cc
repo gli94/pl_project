@@ -75,6 +75,8 @@ int main()
                 board[ii * N + jj] = data[i * NUM_TESTCASE + ii * N + jj];
             }
         }
+     
+    printBoard(board);
         
     cuda_Backtrack(board, solved, &execution_time[i]);
     
