@@ -12,7 +12,7 @@
 #define BLOCK_SIZE 3
 #define UNASSINED 0
 #define MAXB 1000
-#define NUM_TESTCASE 100
+#define NUM_TESTCASE 1
 #define MAXL N*NUM_TESTCASE
 
 void load(char *FileName, int *board) {
@@ -99,6 +99,8 @@ int main()
         }
      
     printBoard(board);
+        
+        printf("\n");
         
     cuda_Backtrack(board, solved, &execution_time[i]);
     
