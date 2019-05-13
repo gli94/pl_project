@@ -12,7 +12,7 @@
 #define BLOCK_SIZE 3
 #define UNASSINED 0
 #define MAXB 1000
-#define NUM_TESTCASE 1
+#define NUM_TESTCASE 10
 #define MAXL N*NUM_TESTCASE
 
 void load(char *FileName, int *board) {
@@ -52,7 +52,7 @@ void printBoard(int *board) {
 int main()
 {
     
-    char filename[] = "sudoku_9x9_100_40.txt";
+    char filename[] = "sudoku_9x9_100_10.txt";
     
     int *data = new int [MAXL * N];
     
@@ -98,16 +98,18 @@ int main()
             }
         }
      
+        printf("Board #%d\n", i);
     printBoard(board);
         
         printf("\n");
         
     cuda_Backtrack(board, solved, &execution_time[i]);
     
+         printf("Solved Board #%d\n", i);
     printBoard(solved);
     }
     
-    FILE * f = fopen("bt_stats_bench_9x9_100_40.txt", "w");
+    FILE * f = fopen("bt_stats_bench_9x9_100_10.txt", "w");
     
     if (f == NULL)
     {
