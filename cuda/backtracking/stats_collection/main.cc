@@ -12,7 +12,8 @@
 #define BLOCK_SIZE 3
 #define UNASSINED 0
 #define MAXB 1000
-#define NUM_TESTCASE 40
+#define OFFSET 40
+#define NUM_TESTCASE 100
 #define MAXL N*NUM_TESTCASE
 
 void load(char *FileName, int *board) {
@@ -64,7 +65,7 @@ int main()
     
     int *solved = new int[N * N];
     
-    for (int i = 0; i < NUM_TESTCASE; i++)
+    for (int i = OFFSET; i < NUM_TESTCASE; i++)
     {
     memset(solved, 0, N * N * sizeof(int));
     
