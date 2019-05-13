@@ -12,7 +12,7 @@
 #define BLOCK_SIZE 3
 #define UNASSINED 0
 #define MAXB 1000
-#define NUM_TESTCASE 10
+#define NUM_TESTCASE 100
 #define MAXL N*NUM_TESTCASE
 
 void load(char *FileName, int *board) {
@@ -61,28 +61,6 @@ int main()
     double execution_time[NUM_TESTCASE];
     
     load(filename, data);
-    
-    /*char buf[MAXB] = {0};
-    
-    int i = 0;
-    int j = 0;
-    
-    FILE * file;
-    file = fopen(filename, "r");
-    
-    if (file == 0)
-    {
-        fprintf(stderr, "failed to open test.txt\n");
-        return 1;
-    }
-    
-    while (i < MAXL && fgets (buf, MAXB - 1, file))
-    {
-        sscanf(buf, "%d %d %d %d %d %d %d %d %d", &data[i * N + 0], &data[i * N + 1], &data[i * N + 2], &data[i * N + 3], &data[i * N + 4], &data[i * N + 5], &data[i * N + 6], &data[i * N + 7], &data[i * N + 8]);
-        i++;
-    }
-    
-    fclose(file);*/
     
     int *solved = new int[N * N];
     
