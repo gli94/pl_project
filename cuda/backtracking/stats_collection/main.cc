@@ -60,9 +60,9 @@ int main()
     
     double execution_time[NUM_TESTCASE];
     
-    //load(filename, data);
+    load(filename, data);
     
-    char buf[MAXB] = {0};
+    /*char buf[MAXB] = {0};
     
     int i = 0;
     int j = 0;
@@ -82,7 +82,7 @@ int main()
         i++;
     }
     
-    fclose(file);
+    fclose(file);*/
     
     int *solved = new int[N * N];
     
