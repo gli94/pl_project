@@ -12,7 +12,7 @@
 #define BLOCK_SIZE 3
 #define UNASSINED 0
 #define MAXB 1000
-#define NUM_TESTCASE 50
+#define NUM_TESTCASE 40
 #define MAXL N*NUM_TESTCASE
 
 void load(char *FileName, int *board) {
