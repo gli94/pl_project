@@ -659,14 +659,20 @@ void cuda_Backtrack(int * board, int * solved, double *exec_time)
     cudaMemset(dev_finished, 0, sizeof(int));
     cudaMemcpy(dev_solved, board, N * N * sizeof(int), cudaMemcpyHostToDevice);
     
-    if((iterations % 2) == 1)
+    /*if((iterations % 2) == 1)
     {
         new_boards = old_boards;
-    }
+    }*/
     
      double startGPUTime1 = CycleTimer::currentSeconds();
-    cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
+    if ((iterations % 2) == 1) {
+    cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, old_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
     cudaDeviceSynchronize();
+    }
+    else {
+        cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
+        cudaDeviceSynchronize();
+    }
     double endGPUTime = CycleTimer::currentSeconds();
     double timeKernel = endGPUTime - startGPUTime;
     
