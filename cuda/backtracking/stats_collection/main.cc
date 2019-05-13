@@ -94,7 +94,7 @@ int main()
         {
             for (int jj = 0; jj < N; jj++)
             {
-                board[ii * N + jj] = data[i * NUM_TESTCASE + ii * N + jj];
+                board[ii * N + jj] = data[i * N * N + ii * N + jj];
             }
         }
      
