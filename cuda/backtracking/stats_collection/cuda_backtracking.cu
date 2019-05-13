@@ -666,6 +666,7 @@ void cuda_Backtrack(int * board, int * solved, double *exec_time)
     
      double startGPUTime1 = CycleTimer::currentSeconds();
     cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
+    cudaDeviceSynchronize();
     double endGPUTime = CycleTimer::currentSeconds();
     double timeKernel = endGPUTime - startGPUTime;
     
