@@ -598,7 +598,7 @@ void callBFSKernel( const int blocksPerGrid,
 
 void cuda_Backtrack(int * board, int * solved, double *exec_time)
 {
-    int blocksPerGrid = 512;
+    int blocksPerGrid = 1024;
     int threadsPerBlock = 256;
  
     int *old_boards;
@@ -629,7 +629,7 @@ void cuda_Backtrack(int * board, int * solved, double *exec_time)
     
     int host_count;
     
-    int iterations = 5;
+    int iterations = 6;
     
     for (int i=0; i<iterations; i++)
     {
