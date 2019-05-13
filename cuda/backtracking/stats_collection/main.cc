@@ -107,6 +107,7 @@ int main()
     
          printf("Solved Board #%d\n", i);
     printBoard(solved);
+        printf("\n");
     }
     
     FILE * f = fopen("bt_stats_bench_9x9_100_10.txt", "w");
