@@ -62,7 +62,7 @@ This project exploits different implementations of sudoku solvers. Specifically,
    To evaluate single puzzle, use the code ```sim_annealing_test.c```.
      
    ```  
-   gcc sim_annealing_test.c -o sim_annealing_test
+   gcc sim_annealing_test.c -lm -o sim_annealing_test
    ./sim_annealing
    ```  
      
