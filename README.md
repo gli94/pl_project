@@ -44,7 +44,7 @@ This project exploits different implementations of sudoku solvers. Specifically,
    ```
    cd ./cuda/backtracking/stats_collection
    make
-    ./cudaBacktracking
+   ./cudaBacktracking
    ```
    
    Available benchmarks are: ```sudoku_9x9_100_32.txt```,   ```sudoku_9x9_100_40.txt```, ```sudoku_9x9_100_48.txt```, ```sudoku_9x9_100_56.txt```, ```sudoku_9x9_100_64.txt```. To get statistics for different benchmarks, change the input file name in ```main.cc```.
@@ -91,7 +91,7 @@ This project exploits different implementations of sudoku solvers. Specifically,
    ```
    cd ./cuda/sim_annealing/stats_collection
    make
-    ./cudaSimAnnealing
+   ./cudaSimAnnealing
    ```
    
    Available benchmarks are: ```sudoku_9x9_100_32.txt```,   ```sudoku_9x9_100_40.txt```, ```sudoku_9x9_100_48.txt```, ```sudoku_9x9_100_56.txt```, ```sudoku_9x9_100_64.txt```. To get statistics for different benchmarks, change the input file name in ```main.cc```.
