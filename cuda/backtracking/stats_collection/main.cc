@@ -86,7 +86,21 @@ int main()
         printf("\n");
         
     cuda_Backtrack(board, solved, &execution_time[i], &finished);
-        num_solved += finished;
+        
+        finished = 1;
+        for (int ii = 0; ii < N; ii++)
+        {
+            for (int jj = 0; jj < N; jj++)
+            {
+                if (solved[ii*N + jj] == 0)
+                {
+                    finished = 0;
+                    break;
+                }
+            }
+        }
+        
+        num_solved+=finished;
     
          printf("Solved Board #%d\n", i);
     printBoard(solved);
