@@ -137,23 +137,5 @@ int main()
     
     fclose(f);
     
-    
-    
-    /*int blocksPerGrid = 1024;
-    int threadsPerBlock = 256;
-    
-    char filename[] = "sudoku_board_hard.txt";
-    
-    int *board = new int[N * N];
-    
-    load(filename, board);
-    
-    int *solved = new int[N * N];
-    memset(solved, 0, N * N * sizeof(int));
-    
-    cuda_SimAnnealing(board, solved);
-    
-    printBoard(solved);*/
-    
     return 0;
 }
