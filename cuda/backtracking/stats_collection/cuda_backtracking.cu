@@ -629,7 +629,7 @@ void cuda_Backtrack(int * board, int * solved, double *exec_time)
     
     int host_count;
     
-    int iterations = 16;
+    int iterations = 20;
     
     for (int i=0; i<iterations; i++)
     {
