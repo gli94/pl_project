@@ -105,7 +105,7 @@ This project exploits different implementations of sudoku solvers. Specifically,
    ./sudokuGen
    ``` 
    
-   K ia the number of empty elements on the Sudoku board and N is the size of one side of the Sudoku board.
+In ```sudokuGen.c```, K is the number of empty elements on the Sudoku board and N is the size of one side of the Sudoku board. SRN is the square root of N. Currently, the code is set to generate 100 boards of given empty elements. To generate a different number of boards, K, N, SRN, the number of iterations and matrix size can be changed accordingly.
   
    
    
