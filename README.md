@@ -95,7 +95,18 @@ This project exploits different implementations of sudoku solvers. Specifically,
    ```
    
    Available benchmarks are: ```sudoku_9x9_100_32.txt```,   ```sudoku_9x9_100_40.txt```, ```sudoku_9x9_100_48.txt```, ```sudoku_9x9_100_56.txt```, ```sudoku_9x9_100_64.txt```. To get statistics for different benchmarks, change the input file name in ```main.cc```.
+  
+  ## 5. Generating the benchmarks
+  
+    
+   ```    
+   cd ./sudokuGen
+   gcc sudokuGen.c -o sudokuGen
+   ./sudokuGen
+   ``` 
    
+   K ia the number of empty elements on the Sudoku board and N is the size of one side of the Sudoku board.
+  
    
    
     
