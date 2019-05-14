@@ -678,7 +678,7 @@ void cuda_Backtrack(int * board, int * solved, double *exec_time, int *finished)
     
     *exec_time = timeKernel;
     
-    *finished = *dev_finished;
+    cudaMemcpy(finished, dev_finished, sizeof(int), cudaMemcpyDeviceToHost);
     
     printf("Execution time: %lfs\n", timeKernel);
     printf("Backtracking kernel time: %lfs\n", endGPUTime - startGPUTime1);
