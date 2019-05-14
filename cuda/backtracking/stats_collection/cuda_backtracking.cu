@@ -607,7 +607,7 @@ void cuda_Backtrack(int * board, int * solved, double *exec_time)
     int *empty_space_count;
     int *board_index;
     
-    int sk = pow(2, 30);
+    int sk = pow(2, 40);
     
     cudaMalloc(&empty_spaces, sk * sizeof(int));
     cudaMalloc(&empty_space_count, ((sk / 81) + 1) * sizeof(int));
