@@ -1,4 +1,4 @@
-This project exploits different implementations of sudoku solvers. Specifically, we want to evaluate and compare serial C implementations and parallel CUDA implementations. We tried 3 different algorithms: Backtracking, Simulated Annealing and Genetic Algorithms.
+This project exploits different implementations of sudoku solvers. Specifically, we want to evaluate and compare serial C implementations and parallel implementations. We tried 3 different algorithms: Backtracking, Simulated Annealing and Genetic Algorithms. For the Backtracking and Simulated Annealing, we tried both C implementation and CUDA implementation. For the Genetic Algorithms, we tried C implementation and OpenMP implementation.
 
 # Compile the code
 
