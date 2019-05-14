@@ -14,10 +14,10 @@ This project exploits different implementations of sudoku solvers. Specifically,
      
    To evaluate single puzzle, use the code ```backtracking_test.c```.
      
-     ```
-      gcc backtracking_test.c -o backtracking_test
-      ./backtracking
-     ```
+   ``` 
+   gcc backtracking_test.c -o backtracking_test
+   ./backtracking
+   ```  
      
    ## 1.2 Backtracking: CUDA implementation
    
