@@ -596,7 +596,7 @@ void callBFSKernel( const int blocksPerGrid,
     cudaBFSKernel<<<blocksPerGrid, threadsPerBlock>>>(old_boards, new_boards, total_boards, board_index, empty_spaces, empty_space_count);
 }
 
-void cuda_Backtrack(int * board, int * solved, double *exec_time)
+void cuda_Backtrack(int * board, int * solved, double *exec_time, int *num_solved)
 {
     int blocksPerGrid = 1024;
     int threadsPerBlock = 256;
@@ -677,6 +677,11 @@ void cuda_Backtrack(int * board, int * solved, double *exec_time)
     double timeKernel = endGPUTime - startGPUTime;
     
     *exec_time = timeKernel;
+    
+    if (*dev_finished == 1)
+    {
+        (*num_solved)++;
+    }
     
     printf("Execution time: %lfs\n", timeKernel);
     printf("Backtracking kernel time: %lfs\n", endGPUTime - startGPUTime1);

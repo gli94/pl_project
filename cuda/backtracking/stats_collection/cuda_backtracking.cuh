@@ -19,6 +19,6 @@ void callBFSKernel( const int blocksPerGrid,
                    int *empty_spaces,
                    int *empty_space_count);
 
-void cuda_Backtrack(int * board, int * solved, double *exec_time);
+void cuda_Backtrack(int * board, int * solved, double *exec_time, int *num_solved);
 
 #endif

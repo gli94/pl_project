@@ -59,6 +59,8 @@ int main()
     
     int *board = new int[N * N];
     
+    int num_solved = 0;
+    
     double execution_time[NUM_TESTCASE];
     
     load(filename, data);
@@ -82,12 +84,14 @@ int main()
         
         printf("\n");
         
-    cuda_Backtrack(board, solved, &execution_time[i]);
+    cuda_Backtrack(board, solved, &execution_time[i], &num_solved);
     
          printf("Solved Board #%d\n", i);
     printBoard(solved);
         printf("\n");
     }
+    
+    printf("Number of solved board: %d\n", num_solved);
     
     FILE * f = fopen("bt_stats_bench_9x9_100_64.txt", "w");
     
