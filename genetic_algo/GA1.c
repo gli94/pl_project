@@ -255,7 +255,9 @@ int main()
 	// printf("cost : %d\n",c);
 	// return 0;
 
-	srand(time(0));
+	long t = time(0);
+	srand(1556693891);
+	printf("%ld\n", t);
 
 	int k=0;
 	for(int i=0; i<N; i+=3)
