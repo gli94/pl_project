@@ -60,6 +60,7 @@ int main()
     int *board = new int[N * N];
     
     int num_solved = 0;
+    int finished;
     
     double execution_time[NUM_TESTCASE];
     
@@ -84,7 +85,8 @@ int main()
         
         printf("\n");
         
-    cuda_Backtrack(board, solved, &execution_time[i], &num_solved);
+    cuda_Backtrack(board, solved, &execution_time[i], &finished);
+        num_solved += finished;
     
          printf("Solved Board #%d\n", i);
     printBoard(solved);
