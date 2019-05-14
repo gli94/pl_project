@@ -88,7 +88,7 @@ int main()
         printf("\n");
     }
     
-    FILE * f = fopen("bt_stats_bench_9x9_100_56.txt", "w");
+    FILE * f = fopen("sa_stats_bench_9x9_100_56.txt", "w");
     
     if (f == NULL)
     {
