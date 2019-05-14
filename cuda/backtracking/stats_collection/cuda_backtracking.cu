@@ -433,7 +433,7 @@ void callBFSKernel( const int blocksPerGrid,
     cudaBFSKernel<<<blocksPerGrid, threadsPerBlock>>>(old_boards, new_boards, total_boards, board_index, empty_spaces, empty_space_count);
 }
 
-void cuda_Backtrack(int * board, int * solved)
+void cuda_Backtrack(int * board, int * solved, double *exec_time, int *finished)
 {
     int blocksPerGrid = 1024;
     int threadsPerBlock = 256;
@@ -496,15 +496,21 @@ void cuda_Backtrack(int * board, int * solved)
     cudaMemset(dev_finished, 0, sizeof(int));
     cudaMemcpy(dev_solved, board, N * N * sizeof(int), cudaMemcpyHostToDevice);
     
-    if((iterations % 2) == 1)
-    {
-        new_boards = old_boards;
-    }
-    
      double startGPUTime1 = CycleTimer::currentSeconds();
-    cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
+    if ((iterations % 2) == 1) {
+    cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, old_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
+    cudaDeviceSynchronize();
+    }
+    else {
+        cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
+        cudaDeviceSynchronize();
+    }
     double endGPUTime = CycleTimer::currentSeconds();
     double timeKernel = endGPUTime - startGPUTime;
+    
+    *exec_time = timeKernel;
+    
+    cudaMemcpy(finished, dev_finished, sizeof(int), cudaMemcpyDeviceToHost);
     
     printf("Execution time: %lfs\n", timeKernel);
     printf("Backtracking kernel time: %lfs\n", endGPUTime - startGPUTime1);

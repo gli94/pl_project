@@ -6,7 +6,7 @@
 #include <cstring>
 #include <algorithm>
 
-#include "cuda_backtracking.cuh"
+#include "cuda_simannealing.cuh"
 
 #define N 9
 #define BLOCK_SIZE 3
@@ -60,7 +60,7 @@ int main()
     int *solved = new int[N * N];
     memset(solved, 0, N * N * sizeof(int));
     
-    cuda_Backtrack(board, solved);
+    cuda_SimAnnealing(board, solved);
     
     printBoard(solved);
     
