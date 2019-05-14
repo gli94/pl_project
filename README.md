@@ -1,8 +1,8 @@
 This project exploits different implementations of sudoku solvers. Specifically, we want to evaluate and compare serial C implementations and parallel CUDA implementations. We tried 3 different algorithms: Backtracking, Simulated Annealing and Genetic Algorithms.
 
-# 1. Compile the code
+# Compile the code
 
-   ## 1.1 Backtracking: C implementation
+   ## 1. Backtracking: C implementation
     
    ```    
    cd ./backtracking
@@ -19,7 +19,7 @@ This project exploits different implementations of sudoku solvers. Specifically,
    ./backtracking
    ```  
      
-   ## 1.2 Backtracking: CUDA implementation
+   ## 2. Backtracking: CUDA implementation
    
    First, set up the CUDA environment. We tried to run the code on compute node of Maverick2 at TACC. Do the following to set up the environment:
    
@@ -49,7 +49,7 @@ This project exploits different implementations of sudoku solvers. Specifically,
    
    Available benchmarks are: ```sudoku_9x9_100_32.txt```,   ```sudoku_9x9_100_40.txt```, ```sudoku_9x9_100_48.txt```, ```sudoku_9x9_100_56.txt```, ```sudoku_9x9_100_64.txt```. To get statistics for different benchmarks, change the input file name in ```main.cc```.
    
-   ## 1.3 Simulated Annealing: C implementation
+   ## 3. Simulated Annealing: C implementation
     
    ```    
    cd ./sim_annealing
@@ -66,7 +66,7 @@ This project exploits different implementations of sudoku solvers. Specifically,
    ./sim_annealing
    ```  
      
-   ## 1.4 Simulated Annealing: CUDA implementation
+   ## 4. Simulated Annealing: CUDA implementation
    
    First, set up the CUDA environment.
    
