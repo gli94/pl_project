@@ -25,7 +25,7 @@ void load(char *FileName, int *board) {
     
     char temp;
     
-    for (int i = 0; i < MAXL; i++) {
+    for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             if (!fscanf(a_file, "%c\n", &temp)) {
                 printf("File loading error!\n");
@@ -53,7 +53,7 @@ void printBoard(int *board) {
 int main()
 {
     
-    char filename[] = "sudoku_9x9_100_64.txt";
+    char filename[] = "sudoku_board_hard.txt";
     
     int *data = new int [MAXL * N];
     
@@ -64,7 +64,7 @@ int main()
     
     double execution_time[NUM_TESTCASE];
     
-    load(filename, data);
+    //load(filename, data);
     
     int *solved = new int[N * N];
     
@@ -72,13 +72,15 @@ int main()
     {
     memset(solved, 0, N * N * sizeof(int));
     
-        for (int ii = 0; ii < N; ii++)
+        /*for (int ii = 0; ii < N; ii++)
         {
             for (int jj = 0; jj < N; jj++)
             {
                 board[ii * N + jj] = data[i * N * N + ii * N + jj];
             }
-        }
+        }*/
+        
+        load(filename, board);
      
         printf("Board #%d\n", i);
     printBoard(board);

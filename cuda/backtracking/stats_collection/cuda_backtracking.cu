@@ -460,9 +460,13 @@ void cuda_Backtrack(int * board, int * solved, double *exec_time, int *finished)
     
     cudaMemcpy(old_boards, board, N * N * sizeof(int), cudaMemcpyHostToDevice);
     
+    double total_time = 0.0;
+    
     double startGPUTime = CycleTimer::currentSeconds();
     callBFSKernel(blocksPerGrid, threadsPerBlock, old_boards, new_boards, total_boards, board_index, empty_spaces, empty_space_count);
     double endGPUTimeBFS = CycleTimer::currentSeconds();
+    
+    total_time += (endGPUTimeBFS - startGPUTime);
     
     int host_count;
     
@@ -476,11 +480,17 @@ void cuda_Backtrack(int * board, int * solved, double *exec_time, int *finished)
         
         if((i % 2) == 0)
         {
+            double startTime1_1 = CycleTimer::currentSeconds();
             callBFSKernel(blocksPerGrid, threadsPerBlock, new_boards, old_boards, host_count, board_index, empty_spaces, empty_space_count);
+            double endTime1_1 = CycleTimer::currentSeconds();
+            total_time += (endTime1_1 - startTime1_1);
         }
         else
         {
+            double startTime1_2 = CycleTimer::currentSeconds();
             callBFSKernel(blocksPerGrid, threadsPerBlock, old_boards, new_boards, host_count, board_index, empty_spaces, empty_space_count);
+            double endTime1_2 = CycleTimer::currentSeconds();
+            total_time += (endTime1_2 - startTime1_2);
         }
     }
     
@@ -498,17 +508,23 @@ void cuda_Backtrack(int * board, int * solved, double *exec_time, int *finished)
     
      double startGPUTime1 = CycleTimer::currentSeconds();
     if ((iterations % 2) == 1) {
+        double startTime1_3 = CycleTimer::currentSeconds();
     cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, old_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
     cudaDeviceSynchronize();
+        double endTime1_3 = CycleTimer::currentSeconds();
+        total_time += (endTime1_3 - startTime1_3);
     }
     else {
+        double startTime1_4 = CycleTimer::currentSeconds();
         cuda_sudokuBacktrack(blocksPerGrid, threadsPerBlock, new_boards, host_count, empty_spaces, empty_space_count, dev_finished, dev_solved);
         cudaDeviceSynchronize();
+        double endTime1_4 = CycleTimer::currentSeconds();
+        total_time += (endTime1_4 - startTime1_4);
     }
     double endGPUTime = CycleTimer::currentSeconds();
     double timeKernel = endGPUTime - startGPUTime;
     
-    *exec_time = timeKernel;
+    *exec_time = total_time;
     
     cudaMemcpy(finished, dev_finished, sizeof(int), cudaMemcpyDeviceToHost);
     
