@@ -359,7 +359,7 @@ int main()
     
     
     FILE * file;
-    file = fopen("sudoku_9x9_100_56.txt", "r");
+    file = fopen("sudoku_9x9_100_32.txt", "r");
     
     if (file == 0)
     {
@@ -409,7 +409,7 @@ int main()
         
     }
     
-    FILE * f = fopen("sa_stats_bench_9x9_100_56.txt", "w");
+    FILE * f = fopen("sa_stats_bench_9x9_100_32.txt", "w");
     
     if (f == NULL)
     {
