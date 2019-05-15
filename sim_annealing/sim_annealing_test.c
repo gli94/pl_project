@@ -10,7 +10,7 @@
 #define UNASSIGNED 0
 #define TEMP 0.5
 #define ALPHA 0.99999
-#define MAX_ITER 1000000
+#define MAX_ITER 10000000
 #define MAXB 1000
 #define NUM_TESTCASE 100
 #define MAXL N*NUM_TESTCASE
