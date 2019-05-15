@@ -13,7 +13,7 @@
 #define UNASSINED 0
 #define MAXB 1000
 #define OFFSET 40
-#define NUM_TESTCASE 5
+#define NUM_TESTCASE 100
 #define MAXL N*NUM_TESTCASE
 
 void load(char *FileName, int *board) {
@@ -52,7 +52,7 @@ void printBoard(int *board) {
 
 int main()
 {
-    char filename[] = "sudoku_board_hard.txt";
+    char filename[] = "sudoku_9x9_100_32.txt";
     
     int *data = new int [MAXL * N];
     
@@ -90,7 +90,7 @@ int main()
         printf("\n");
     }
     
-    FILE * f = fopen("sa_stats_bench_9x9_100_64.txt", "w");
+    FILE * f = fopen("sa_stats_bench_9x9_100_32.txt", "w");
     
     if (f == NULL)
     {
