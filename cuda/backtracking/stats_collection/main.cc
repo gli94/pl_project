@@ -68,7 +68,7 @@ int main()
     
     int *solved = new int[N * N];
     
-    for (int i = OFFSET; i < NUM_TESTCASE; i++)
+    for (int i = 0; i < NUM_TESTCASE; i++)
     {
     memset(solved, 0, N * N * sizeof(int));
     
