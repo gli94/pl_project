@@ -25,7 +25,7 @@ void load(char *FileName, int *board) {
     
     char temp;
     
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < MAXL; i++) {
         for (int j = 0; j < N; j++) {
             if (!fscanf(a_file, "%c\n", &temp)) {
                 printf("File loading error!\n");
@@ -60,7 +60,7 @@ int main()
     
     double execution_time[NUM_TESTCASE];
     
-    //load(filename, data);
+    load(filename, data);
     
     int *solved = new int[N * N];
     
@@ -68,15 +68,15 @@ int main()
     {
         memset(solved, 0, N * N * sizeof(int));
         
-        /*for (int ii = 0; ii < N; ii++)
+        for (int ii = 0; ii < N; ii++)
         {
             for (int jj = 0; jj < N; jj++)
             {
                 board[ii * N + jj] = data[i * N * N + ii * N + jj];
             }
-        }*/
+        }
         
-        load(filename, board);
+        //load(filename, board);
         
         printf("Board #%d\n", i);
         printBoard(board);
