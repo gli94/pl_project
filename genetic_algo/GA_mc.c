@@ -12,6 +12,7 @@
 #define MUTATE 85
 #define MAX_ITER 1000000
 #define CHRMSMS 500
+#define THREADS 10
 
 
 int len_chrom[N];
@@ -228,15 +229,14 @@ chromosome cross_mutate(chromosome p1, chromosome p2, unsigned int lseed)
 
 void calc_fitness(chromosome ch[])
 {
-	int threads = 10;
-	omp_set_num_threads(threads);
-	int div = CHRMSMS/threads;
+	omp_set_num_threads(THREADS);
+	int div = CHRMSMS/THREADS;
     #pragma omp parallel
     {
     	int id = omp_get_thread_num();
     	int start = id*div;
     	int end;
-    	if(id==(threads-1))
+    	if(id==(THREADS-1))
     		end = CHRMSMS;
     	else
     		end = start+div;
@@ -358,23 +358,27 @@ int main()
 		
 		//eliminate lower half genes
 		//create new genes from the gene pool
-		// int div = 5;
-		// omp_set_num_threads(CHRMSMS/(2*div));
-  //   	#pragma omp parallel
+		// omp_set_num_threads(THREADS);
+		// int div = CHRMSMS/(2*THREADS);
+    	// #pragma omp parallel
 		{
 			// int id = omp_get_thread_num();
-			// unsigned int localseed = globalseed^(id<<0xFF);
-	  //   	int s = (id*div)+(CHRMSMS/2);
-	  //   	int e = s+div;
+			// unsigned int localseed = globalseed^(id<<6);
+			// printf("%d %d ", id, localseed);
+	    	// int s = (id*div)+(CHRMSMS/2);
+	    	// int e = s+div;
+	    	// printf("%d %d\n", s,e);
 			// for(int i=s; i<e; i++)
 			for(int i=CHRMSMS/2; i<CHRMSMS; i++)
 			{
 				unsigned int r1 = fastrand(&globalseed)%(CHRMSMS/2);
 				unsigned int r2 = fastrand(&globalseed)%(CHRMSMS/2);
+				// printf("%d %d %d\n", id, r1, r2);
 				ch[i] = cross_mutate(ch[r1], ch[r2], globalseed);
 				//free(child.gene);
 			}
 		}
+
 
 		if(generation%1000==0){
 			printf("still fitness for gen %ld : %d\n",generation, ch[0].fitness);
