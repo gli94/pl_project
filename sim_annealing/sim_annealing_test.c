@@ -280,7 +280,7 @@ bool sudoku_solver(int * grid)
     }
     
     //printf("final cost = %d\n", current_cost);
-    printf("Iterations: %d \n", count);
+    printf("Iterations: %ld \n", count);
     if (get_cost(grid) == (-2) * N * N)
     {
         return true;
