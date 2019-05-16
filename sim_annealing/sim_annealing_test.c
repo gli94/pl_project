@@ -231,7 +231,7 @@ bool sudoku_solver(int * grid)
     int candidate_cost = 0;
     float delta_cost = 0.0;
     float T = TEMP;
-    int count  = 0;
+    long count  = 0;
     
     update_grid(initial_grid, grid);
     
