@@ -55,7 +55,9 @@ void rand_init(int grid[N][N])
     }
 }
 
-/*int get_cost(int grid[N][N])
+/* Alternative implementation of get_cost() with approach similar to histogram*/
+ 
+ /*int get_cost(int grid[N][N])
 {
     int cost = 0;
     int unique_num = 0;
@@ -288,37 +290,23 @@ bool sudoku_solver(int grid[N][N])
     
     update_grid(initial_grid, grid);
     
-    //printf("Update grid done !\n");
     
     srand(time(NULL));
     
     rand_init(grid);
     
-    //printf("Rand init done !\n");
-    /*printgrid(grid);
-    
-    printf("Initial cost = %d\n", get_cost(grid));*/
     
     while(count < MAX_ITER)
     {
         gen_candidate(grid, candidate, initial_grid);
-        //printf("Gen candidate done !\n");
         current_cost = get_cost(grid);
         candidate_cost = get_cost(candidate);
         delta_cost = (float)(current_cost - candidate_cost);
         
-        /*printf("Iteration #%d:\n", count);
-        printf("current_cost = %d\n", current_cost);
-        printf("candidate_cost = %d\n", candidate_cost);
-        printf("\n");*/
         
         if (exp(delta_cost / T) > ((float)(rand()) / RAND_MAX))
         {
-            //printf("update!\n");
-            //printgrid(candidate);
-            //printf("\n");
             update_grid(grid, candidate);
-            //printgrid(grid);
             current_cost = candidate_cost;
         }
         
@@ -332,7 +320,6 @@ bool sudoku_solver(int grid[N][N])
         count++;
     }
     
-    //printf("final cost = %d\n", current_cost);
     printf("Iterations: %d \n", count);
     if (get_cost(grid) == (-2) * N * N)
     {
