@@ -97,15 +97,20 @@ This project exploits different implementations of sudoku solvers. Specifically,
    Available benchmarks are: ```sudoku_9x9_100_32.txt```,   ```sudoku_9x9_100_40.txt```, ```sudoku_9x9_100_48.txt```, ```sudoku_9x9_100_56.txt```, ```sudoku_9x9_100_64.txt```. To get statistics for different benchmarks, change the input file name in ```main.cc```.
 
   ## 5. Genetic algorithm OpenMP implementation
+  ```
    module load gcc
    cd ./genetic_algo
    make
    ./GA_mc
-
-   There are some parameters defined in GA_mc.c that can be changed to evaluate performance
+```
+   There are some parameters defined in ```GA_mc.c``` that can be changed to evaluate performance:
+   
    MUTATE   -- probability of mutation in a particualar chromosome (number from 0-99)
+   
    MAX_ITER -- maximum number of iterations the program runs before exiting
+   
    CHRMSMS  -- number of chromosomes used
+   
    THREADS  -- number of threads for parallel execution (must be at most the number of chromosomes)
   
   ## 6. Generating the benchmarks
