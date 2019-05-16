@@ -10,7 +10,7 @@
 #define UNASSIGNED 0
 #define TEMP 0.5
 #define ALPHA 0.99999
-#define MAX_ITER 100000000
+#define MAX_ITER 1000000
 #define MAXB 1000
 #define NUM_TESTCASE 100
 #define MAXL N*NUM_TESTCASE
@@ -231,20 +231,15 @@ bool sudoku_solver(int * grid)
     int candidate_cost = 0;
     float delta_cost = 0.0;
     float T = TEMP;
-    long count  = 0;
+    int count  = 0;
     
     update_grid(initial_grid, grid);
     
-    //printf("Update grid done !\n");
     
     srand(time(NULL));
     
     rand_init(grid);
     
-    //printf("Rand init done !\n");
-    /*printgrid(grid);
-    
-    printf("Initial cost = %d\n", get_cost(grid));*/
     
     while(count < MAX_ITER)
     {
@@ -254,18 +249,11 @@ bool sudoku_solver(int * grid)
         candidate_cost = get_cost(candidate);
         delta_cost = (float)(current_cost - candidate_cost);
         
-        /*printf("Iteration #%d:\n", count);
-        printf("current_cost = %d\n", current_cost);
-        printf("candidate_cost = %d\n", candidate_cost);
-        printf("\n");*/
-        
+       
         if (exp(delta_cost / T) > ((float)(rand()) / RAND_MAX))
         {
-            //printf("update!\n");
-            //printgrid(candidate);
-            //printf("\n");
+            
             update_grid(grid, candidate);
-            //printgrid(grid);
             current_cost = candidate_cost;
         }
         
@@ -279,7 +267,6 @@ bool sudoku_solver(int * grid)
         count++;
     }
     
-    //printf("final cost = %d\n", current_cost);
     printf("Iterations: %ld \n", count);
     if (get_cost(grid) == (-2) * N * N)
     {
